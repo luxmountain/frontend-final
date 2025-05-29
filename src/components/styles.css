@@ -32,3 +32,105 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
+
+.user-detail-card {
+  margin: 16px;
+  padding: 24px;
+}
+
+.user-detail-header {
+  margin-bottom: 24px;
+}
+
+.user-detail-location {
+  margin: 16px 0;
+  color: #666;
+}
+
+.user-detail-description {
+  margin: 16px 0 24px 0;
+  line-height: 1.6;
+}
+
+.photos-button {
+  margin-top: 16px !important;
+}
+
+.photo-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.photo-card {
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+
+.photo-card:hover {
+  transform: scale(1.02);
+}
+
+.photo-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.comment-section {
+  margin-top: 15px;
+}
+
+.comment-card {
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.single-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.photo-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.photo-navigation .MuiIconButton-root {
+  padding: 12px;
+}
+
+.photo-navigation .MuiTypography-root {
+  min-width: 150px;
+  text-align: center;
+}
+
+.user-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.user-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.user-list .MuiListItemText-primary {
+  font-weight: 500;
+}
+
+.user-list .MuiListItemText-secondary {
+  color: rgba(0, 0, 0, 0.6);
+}

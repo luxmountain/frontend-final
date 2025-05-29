@@ -62,7 +62,7 @@ function LoginRegister() {
           last_name: res.last_name
         }));
 
-        navigate('/login');
+        navigate('/users');
       } else {
         setLoginError(res.error || 'Invalid credentials');
       }
@@ -113,7 +113,7 @@ function LoginRegister() {
           description: '',
           occupation: ''
         });
-        navigate('/');
+        navigate('/login');
       } else {
         setRegisterError(res.message || 'Registration failed');
       }
