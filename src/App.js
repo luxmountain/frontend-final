@@ -1,7 +1,6 @@
 // src/App.js
 import React from "react";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -36,14 +35,12 @@ const App = () => {
   const allRoutes = renderRoutes(routes);
 
   return (
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          {allRoutes}
-        </Route>
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route element={<Layout />}>
+        {allRoutes}
+      </Route>
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 };
 

@@ -12,10 +12,12 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import models from "../modelData/models";
+import { useAuth } from '../context/AuthContext';
 
 function LoginRegister() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -37,7 +39,6 @@ function LoginRegister() {
   });
   const [registerError, setRegisterError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState('');
-
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -45,6 +46,24 @@ function LoginRegister() {
     if (!loginForm.loginName.trim() || !loginForm.password.trim()) {
       setLoginError('Please enter both login name and password');
       return;
+    }
+
+    try {
+      // In a real app, you would validate the password here
+      // For this demo, we'll just check if the user exists
+      const user = await models.userModel(loginForm.loginName);
+      if (user) {
+        const success = await login(loginForm.loginName);
+        if (success) {
+          navigate('/photos/' + loginForm.loginName);
+        } else {
+          setLoginError('Failed to login');
+        }
+      } else {
+        setLoginError('User not found');
+      }
+    } catch (error) {
+      setLoginError('An error occurred during login');
     }
 
     try {

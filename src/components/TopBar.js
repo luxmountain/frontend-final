@@ -3,52 +3,50 @@ import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Button, Box } 
 import { useLocation, useNavigate } from "react-router-dom";
 import PhotoUploadDialog from "./PhotoUploadDialog";
 import models from "../modelData/models";
+import { useAuth } from "../context/AuthContext";
 
 import "./styles.css";
 
 function TopBar() {
   const location = useLocation();
   const navigate = useNavigate();
-  // Loại bỏ useAuth
-  // const { currentUser, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const [contextText, setContextText] = useState("");
   const [advancedFeatures, setAdvancedFeatures] = useState(() => {
     const stored = localStorage.getItem('advancedFeatures');
     return stored === 'true';
-  });
-  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-
-  // Giả định currentUser _id để xử lý upload thành công
-  // Nếu bạn có cách lấy currentUser từ ngoài thì thay thế lại
-  const currentUser = null; // Hoặc lấy từ props
-
-  useEffect(() => {
+  });  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+    useEffect(() => {
     async function fetchUser() {
       const pathParts = location.pathname.split("/");
       const userId = pathParts[pathParts.length - 1];
 
-      if (pathParts.includes("photos")) {
-        const user = await models.userModel(userId);
-        if (user) {
-          setContextText(`Photos of ${user.first_name} ${user.last_name}`);
-        } else {
-          setContextText("");
-        }
-      } else if (pathParts.includes("users")) {
-        const user = await models.userModel(userId);
-        if (user) {
-          setContextText(`${user.first_name} ${user.last_name}`);
-        } else {
+      console.log(userId);
+      if (pathParts.includes("photos") || pathParts.includes("users")) {
+        try {
+          const user = await models.userModel(userId);
+          if (user) {
+            if (pathParts.includes("photos")) {
+              setContextText(`Photos of ${user.first_name} ${user.last_name}`);
+            } else {
+              setContextText(`${user.first_name} ${user.last_name}`);
+            }
+          } else {
+            setContextText("");
+          }
+        } catch (error) {
+          console.error("Error fetching user:", error);
           setContextText("");
         }
       } else {
-        setContextText("Please Login"); // Vì không có currentUser
+        // Set context text based on authentication state
+        setContextText(currentUser ? `Welcome ${currentUser.first_name}` : "Please Login");
       }
     }
 
     fetchUser();
-  }, [location]);
+  }, [location, currentUser]);
 
   const handleAdvancedFeaturesChange = (event) => {
     const newValue = event.target.checked;
@@ -56,12 +54,9 @@ function TopBar() {
     localStorage.setItem('advancedFeatures', newValue);
     window.dispatchEvent(new Event('storage'));
   };
-
-  // Xóa hàm logout
-  // const handleLogout = async () => {
-  //   await logout();
-  //   navigate('/login');
-  // };
+  const handleLogout = () => {
+    logout();
+  };
 
   const handlePhotoUploadSuccess = () => {
     const pathParts = location.pathname.split("/");
@@ -98,12 +93,11 @@ function TopBar() {
                   checked={advancedFeatures}
                   onChange={handleAdvancedFeaturesChange}
                 />
-              }
-              label="Enable Advanced Features"
+              }              label="Enable Advanced Features"
             />
-            {/* <Button color="inherit" onClick={handleLogout}>
+            <Button color="inherit" onClick={handleLogout}>
               Logout
-            </Button> */}
+            </Button>
           </Box>
         )}
       </Toolbar>
