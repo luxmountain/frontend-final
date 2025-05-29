@@ -11,23 +11,27 @@ function TopBar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
-
   const [contextText, setContextText] = useState("");
   const [advancedFeatures, setAdvancedFeatures] = useState(() => {
     const stored = localStorage.getItem('advancedFeatures');
     return stored === 'true';
-  });  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-    useEffect(() => {
-    async function fetchUser() {
-      const pathParts = location.pathname.split("/");
-      const userId = pathParts[pathParts.length - 1];
+  });
 
-      console.log(userId);
-      if (pathParts.includes("photos") || pathParts.includes("users")) {
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const pathParts = location.pathname.split("/").filter(Boolean); // lọc bỏ phần rỗng
+
+      if (
+        (pathParts[0] === "users" || pathParts[0] === "photos") &&
+        pathParts.length === 2 // phải có đúng 2 phần, đảm bảo có id
+      ) {
+        const userId = pathParts[1]; // lấy đúng id
         try {
           const user = await models.userModel(userId);
           if (user) {
-            if (pathParts.includes("photos")) {
+            if (pathParts[0] === "photos") {
               setContextText(`Photos of ${user.first_name} ${user.last_name}`);
             } else {
               setContextText(`${user.first_name} ${user.last_name}`);
@@ -40,8 +44,7 @@ function TopBar() {
           setContextText("");
         }
       } else {
-        // Set context text based on authentication state
-        setContextText(currentUser ? `Welcome ${currentUser.first_name}` : "Please Login");
+        setContextText(currentUser ? `Hi ${currentUser.first_name}` : "Please Login");
       }
     }
 
@@ -73,16 +76,16 @@ function TopBar() {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {contextText}
         </Typography>
-        
+
         {/* Nếu không có currentUser thì ẩn toàn bộ phần user controls */}
         {/* Nếu muốn có thì truyền currentUser qua props và bỏ comment */}
         {currentUser && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body1">
+            {/* <Typography variant="body1">
               Hi {currentUser.first_name}
-            </Typography>
-            <Button 
-              color="inherit" 
+            </Typography> */}
+            <Button
+              color="inherit"
               onClick={() => setUploadDialogOpen(true)}
             >
               Add Photo
@@ -93,7 +96,7 @@ function TopBar() {
                   checked={advancedFeatures}
                   onChange={handleAdvancedFeaturesChange}
                 />
-              }              label="Enable Advanced Features"
+              } label="Enable Advanced Features"
             />
             <Button color="inherit" onClick={handleLogout}>
               Logout
@@ -101,8 +104,8 @@ function TopBar() {
           </Box>
         )}
       </Toolbar>
-      
-      <PhotoUploadDialog 
+
+      <PhotoUploadDialog
         open={uploadDialogOpen}
         onClose={() => setUploadDialogOpen(false)}
         onSuccess={handlePhotoUploadSuccess}
