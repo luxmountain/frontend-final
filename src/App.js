@@ -7,7 +7,8 @@ import {
 } from "react-router-dom";
 import routes from "./routes";
 import ProtectedRoute from "./ProtectedRoute";
-import Layout from "./components/Layout";
+import Toolbar from "./components/ToolBar";
+import Layout from "./components/Sidebar";
 
 const renderRoutes = (routes, parentPath = "") => {
   return routes.flatMap(({ path, element: Element, protected: isProtected, children }) => {
@@ -15,7 +16,9 @@ const renderRoutes = (routes, parentPath = "") => {
 
     const RouteElement = isProtected ? (
       <ProtectedRoute>
-        <Element />
+        <Layout>
+          <Element />
+        </Layout>
       </ProtectedRoute>
     ) : (
       <Element />
@@ -36,7 +39,7 @@ const App = () => {
 
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route element={<Toolbar />}>
         {allRoutes}
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />
