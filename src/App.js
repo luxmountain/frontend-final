@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import routes from "./routes";
+import ProtectedRoute from "./ProtectedRoute";
+import Layout from "./components/Layout";
 
-function App() {
+const renderRoutes = (routes, parentPath = "") => {
+  return routes.flatMap(({ path, element: Element, protected: isProtected, children }) => {
+    const fullPath = `${parentPath}/${path}`.replace(/\/+/g, "/");
+
+    const RouteElement = isProtected ? (
+      <ProtectedRoute>
+        <Element />
+      </ProtectedRoute>
+    ) : (
+      <Element />
+    );
+
+    const route = (
+      <Route key={fullPath} path={fullPath} element={RouteElement} />
+    );
+
+    const childRoutes = children ? renderRoutes(children, fullPath) : [];
+
+    return [route, ...childRoutes];
+  });
+};
+
+const App = () => {
+  const allRoutes = renderRoutes(routes);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route element={<Layout />}>
+          {allRoutes}
+        </Route>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
