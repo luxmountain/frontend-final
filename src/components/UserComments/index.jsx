@@ -52,13 +52,14 @@ function UserComments() {
     loadUserComments();
   }, [userId]);
 
-  const handlePhotoClick = () => {
-    navigate(`/photos/${userId}`);
+  const handlePhotoClick = (photoId) => {
+    navigate(`/photos/${userId}/${photoId}`);
   };
 
   if (!user) {
     return <Typography>Loading...</Typography>;
   }
+  const BACKEND_URL = "http://localhost:8081";
 
   return (
     <Box className="user-comments">
@@ -69,10 +70,10 @@ function UserComments() {
         {comments.map((comment) => (
           <Grid item xs={12} sm={6} md={4} key={comment._id}>
             <Card>
-              <CardActionArea onClick={() => handlePhotoClick()}>
+              <CardActionArea onClick={() => handlePhotoClick(comment.photo._id)}>
                 <CardMedia
                   component="img"
-                  image={`/images/${comment.photo.file_name}`}
+                  image={`${BACKEND_URL}/images/${comment.photo.file_name}`}
                   alt="Photo thumbnail"
                   sx={{ objectFit: "cover" }}
                 />

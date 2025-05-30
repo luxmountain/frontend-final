@@ -36,26 +36,43 @@ function UserList({ showBadges = false }) {
         {users.map((user) => (
           <React.Fragment key={user._id}>
             <ListItem disablePadding className="user-list-item">
-              <ListItemButton component={Link} to={`/users/${user._id}`}>
-                <Box className="user-list-content" display="flex" justifyContent="space-between" width="100%">
+              <ListItemButton onClick={() => navigate(`/users/${user._id}`)}>
+                <Box
+                  className="user-list-content"
+                  display="flex"
+                  justifyContent="space-between"
+                  width="100%"
+                >
                   <ListItemText
                     primary={`${user.first_name} ${user.last_name}`}
                     secondary={user.occupation}
                   />
                   {showBadges && (
-                    <Box className="user-list-badges" display="flex" gap={4} onClick={(e) => e.stopPropagation()}>
-                      <Badge
-                        badgeContent={user.photoCount || 0}
-                        color="success"
+                    <Box className="user-list-badges" display="flex" gap={4}>
+                      <Box
+                        onClick={(e) => {
+                          e.stopPropagation(); // chặn click lan ra ngoài
+                          navigate(`/photos/${user._id}`);
+                        }}
                         sx={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/photos/${user._id}`)}
-                      />
-                      <Badge
-                        badgeContent={user.commentCount || 0}
-                        color="error"
+                      >
+                        <Badge
+                          badgeContent={user.photoCount || 0}
+                          color="success"
+                        />
+                      </Box>
+                      <Box
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/comments/${user._id}`);
+                        }}
                         sx={{ cursor: "pointer" }}
-                        onClick={() => navigate(`/comments/${user._id}`)}
-                      />
+                      >
+                        <Badge
+                          badgeContent={user.commentCount || 0}
+                          color="error"
+                        />
+                      </Box>
                     </Box>
                   )}
                 </Box>
