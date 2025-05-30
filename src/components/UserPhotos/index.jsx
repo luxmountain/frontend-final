@@ -22,8 +22,14 @@ function UserPhotos() {
       if (userData) setUser(userData);
       else console.error("User not found");
 
-      if (Array.isArray(photoData)) setPhotos(photoData);
-      else console.error("Photos not found");
+      if (Array.isArray(photoData)) {
+        const sortedPhotos = photoData.sort(
+          (a, b) => new Date(b.date_time) - new Date(a.date_time)
+        );
+        setPhotos(sortedPhotos);
+      } else {
+        console.error("Photos not found");
+      }
     }
 
     fetchData();

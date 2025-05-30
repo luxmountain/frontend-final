@@ -13,12 +13,14 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import models from "../../modelData/models";
 import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 function PhotoUploadDialog({ open, onClose, onSuccess, userId }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleFileSelect = (event) => {
     const file = event.target.files[0];
@@ -44,6 +46,7 @@ function PhotoUploadDialog({ open, onClose, onSuccess, userId }) {
       await models.uploadPhoto(selectedFile, userId);
       onSuccess();
       handleClose();
+      navigate(`/photos/${userId}`);
     } catch (error) {
       setError("Failed to upload photo. Please try again.");
     } finally {

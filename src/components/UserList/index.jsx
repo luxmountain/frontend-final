@@ -22,7 +22,10 @@ function UserList({ showBadges = false }) {
     async function loadUsers() {
       const data = await models.userListModel();
       if (Array.isArray(data)) {
-        setUsers(data);
+        const sortedUsers = data.sort(
+          (a, b) => (b.photoCount || 0) - (a.photoCount || 0)
+        );
+        setUsers(sortedUsers);
       } else {
         console.error("userListModel returned non-array data:", data);
       }
