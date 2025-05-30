@@ -1,7 +1,6 @@
 import React from 'react';
 
 const AuthPage = React.lazy(() => import('./pages/auth'));
-const Home = React.lazy(() => import('./pages/home'));
 const UserList = React.lazy(() => import('./components/UserList'));
 const UserDetail = React.lazy(() => import('./components/UserDetail'));
 const UserPhotos = React.lazy(() => import('./components/UserPhotos'));
@@ -9,9 +8,9 @@ const UserPhotos = React.lazy(() => import('./components/UserPhotos'));
 const routes = [
   {
     path: '/',
-    element: Home,
+    element: UserList,
     protected: true,
-    label: 'Home',
+    label: 'UserList',
   },
   {
     path: '/users',

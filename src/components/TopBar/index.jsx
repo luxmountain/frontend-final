@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Button, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import PhotoUploadDialog from "./PhotoUploadDialog";
-import models from "../modelData/models";
-import { useAuth } from "../context/AuthContext";
+import PhotoUploadDialog from "../PhotoUploadDialog";
+import models from "../../modelData/models";
+import { useAuth } from "../../context/AuthContext";
 
 import "./styles.css";
 

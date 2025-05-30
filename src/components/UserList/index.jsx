@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Divider, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import { Link } from "react-router-dom";
-import models from "../modelData/models";
+import models from "../../modelData/models";
 
 function UserList() {
   const [users, setUsers] = useState([]);

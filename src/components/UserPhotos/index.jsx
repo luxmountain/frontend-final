@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Card, CardContent, CardMedia, Link, Button } from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
-import models from "../modelData/models";
+import models from "../../modelData/models";
 import "./styles.css";
 
 function UserPhotos() {

@@ -11,7 +11,7 @@ import {
   Alert
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import models from '../modelData/models';
+import models from '../../modelData/models';
 
 function PhotoUploadDialog({ open, onClose, onSuccess }) {
   const [selectedFile, setSelectedFile] = useState(null);

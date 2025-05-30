@@ -1,5 +1,5 @@
 import React from "react";
-import UserList from "./UserList.jsx";
+import UserList from "../UserList";
 
 const Layout = ({ children }) => {
   return (
