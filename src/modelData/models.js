@@ -30,6 +30,7 @@ const models = {
       body: JSON.stringify({ comment, user_id: userId }),
     });
   },
+commentsOfUser: (userId) => fetchModel(`/user/comment/${userId}`),
 
   register: async (userData) => {
     return await fetchModel('/user', {

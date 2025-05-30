@@ -21,29 +21,13 @@ function UserComments() {
   useEffect(() => {
     async function loadUserComments() {
       try {
+        // Load user basic info
         const userData = await models.userModel(userId);
         setUser(userData);
-        
-        // Get all photos to find ones with user's comments
-        const photos = await models.photoOfUserModel(userId);
-        let userComments = [];
-        
-        // Extract comments made by this user from all photos
-        photos.forEach(photo => {
-          const userCommentsOnPhoto = photo.comments.filter(
-            comment => comment.user._id === userId
-          ).map(comment => ({
-            ...comment,
-            photo: {
-              _id: photo._id,
-              file_name: photo.file_name,
-              date_time: photo.date_time,
-            }
-          }));
-          userComments = [...userComments, ...userCommentsOnPhoto];
-        });
 
-        setComments(userComments);
+        // Load comments made by user on any photo
+        const commentData = await models.commentsOfUser(userId);
+        setComments(commentData);
       } catch (error) {
         console.error("Error loading user comments:", error);
       }
@@ -59,30 +43,31 @@ function UserComments() {
   if (!user) {
     return <Typography>Loading...</Typography>;
   }
+
   const BACKEND_URL = "http://localhost:8081";
 
   return (
-    <Box className="user-comments">
+    <Box className="user-comments" padding={2}>
       <Typography variant="h4" gutterBottom>
         Comments by {user.first_name} {user.last_name}
       </Typography>
       <Grid container spacing={3}>
         {comments.map((comment) => (
-          <Grid item xs={12} sm={6} md={4} key={comment._id}>
+          <Grid item xs={12} sm={6} md={4} key={comment.comment_id}>
             <Card>
-              <CardActionArea onClick={() => handlePhotoClick(comment.photo._id)}>
+              <CardActionArea onClick={() => handlePhotoClick(comment.photo_id)}>
                 <CardMedia
                   component="img"
-                  image={`${BACKEND_URL}/images/${comment.photo.file_name}`}
+                  image={`${BACKEND_URL}/images/${comment.file_name}`}
                   alt="Photo thumbnail"
                   sx={{ objectFit: "cover" }}
                 />
                 <CardContent>
                   <Typography variant="body2" color="text.secondary">
-                    {new Date(comment.date_time).toLocaleString()}
+                    {new Date(comment.comment_date_time).toLocaleString()}
                   </Typography>
                   <Typography variant="body1">
-                    {comment.comment}
+                    {comment.comment_text}
                   </Typography>
                 </CardContent>
               </CardActionArea>
