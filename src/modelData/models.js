@@ -4,7 +4,7 @@ const models = {
   schemaInfo: () => fetchModel("/test/info"),
   userListModel: () => fetchModel("/user/list"),
   userModel: (userId) => fetchModel(`/user/${userId}`),
-  photoOfUserModel: (userId) => fetchModel(`/photo/${userId}`),
+  photoOfUserModel: (userId) => fetchModel(`/photosOfUser/${userId}`),
 
   login: async (loginName, password) => {
     return await fetchModel('/admin/login', {
