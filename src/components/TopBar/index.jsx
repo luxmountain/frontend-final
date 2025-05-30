@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PhotoUploadDialog from "../PhotoUploadDialog";
 import models from "../../modelData/models";
 import { useAuth } from "../../context/AuthContext";
-
+import { FormControlLabel, Checkbox } from "@mui/material";
 import "./styles.css";
 
 function TopBar() {
@@ -12,11 +12,20 @@ function TopBar() {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [contextText, setContextText] = useState("");
+  const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(() => {
+    const saved = localStorage.getItem("advancedFeaturesEnabled");
+    return saved === "true";
+  });
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
+      if (!currentUser) {
+        setContextText("Please Login");
+        return;
+      }
+
       const pathParts = location.pathname.split("/").filter(Boolean);
 
       if (
@@ -40,7 +49,9 @@ function TopBar() {
           setContextText("");
         }
       } else {
-        setContextText(currentUser ? `Hi ${currentUser.first_name}` : "Please Login");
+        setContextText(
+          currentUser ? `Hi ${currentUser.first_name}` : "Please Login"
+        );
       }
     }
 
@@ -60,18 +71,19 @@ function TopBar() {
     }
   };
 
+  const handleAdvancedFeaturesChange = (event) => {
+    const checked = event.target.checked;
+    setAdvancedFeaturesEnabled(checked);
+    localStorage.setItem("advancedFeaturesEnabled", checked);
+  };
+
   return (
     <AppBar position="fixed">
       <Toolbar className="appbar-toolbar">
         {currentUser && (
           <Box className="left-controls">
-            <Typography variant="body1">
-              Hi {currentUser.first_name}
-            </Typography>
-            <Button
-              color="inherit"
-              onClick={() => setUploadDialogOpen(true)}
-            >
+            <Typography variant="body1">Hi {currentUser.first_name}</Typography>
+            <Button color="inherit" onClick={() => setUploadDialogOpen(true)}>
               Add Photo
             </Button>
             <Button color="inherit" onClick={handleLogout}>
@@ -79,7 +91,17 @@ function TopBar() {
             </Button>
           </Box>
         )}
-
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={advancedFeaturesEnabled}
+              onChange={handleAdvancedFeaturesChange}
+              color="inherit"
+            />
+          }
+          label="Enable Advanced Features"
+          sx={{ color: "white", ml: 2 }}
+        />
         <Typography variant="h6" component="div">
           {contextText}
         </Typography>
