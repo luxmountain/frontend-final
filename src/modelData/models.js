@@ -40,11 +40,12 @@ const models = {
     });
   },
 
-  uploadPhoto: async (file) => {
+  uploadPhoto: async (file, userId) => {
     const formData = new FormData();
-    formData.append('uploadedphoto', file);
-
-    return await fetchModel('/photos/new', {
+    formData.append('photo', file);
+    formData.append('user_id', userId);
+    
+    return await fetchModel('/photosOfUser/new', {
       method: 'POST',
       credentials: 'include',
       body: formData,

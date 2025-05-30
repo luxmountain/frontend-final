@@ -16,7 +16,6 @@ function TopBar() {
     const saved = localStorage.getItem("advancedFeaturesEnabled");
     return saved === "true";
   });
-
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -120,6 +119,7 @@ function TopBar() {
         open={uploadDialogOpen}
         onClose={() => setUploadDialogOpen(false)}
         onSuccess={handlePhotoUploadSuccess}
+        userId={currentUser._id}
       />
     </AppBar>
   );

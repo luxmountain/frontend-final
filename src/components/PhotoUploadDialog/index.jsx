@@ -14,7 +14,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import models from "../../modelData/models";
 import "./styles.css";
 
-function PhotoUploadDialog({ open, onClose, onSuccess }) {
+function PhotoUploadDialog({ open, onClose, onSuccess, userId }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -40,7 +40,8 @@ function PhotoUploadDialog({ open, onClose, onSuccess }) {
     setError("");
 
     try {
-      await models.uploadPhoto(selectedFile);
+      console.log(selectedFile);
+      await models.uploadPhoto(selectedFile, userId);
       onSuccess();
       handleClose();
     } catch (error) {
