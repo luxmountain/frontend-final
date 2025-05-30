@@ -1,0 +1,9 @@
+.appbar-toolbar {
+  justify-content: space-between;
+}
+
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

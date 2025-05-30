@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Card, CardContent, CardMedia, Link, Button } from "@mui/material";
+import { Typography, Card, CardContent, CardMedia, Link } from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
 import "./styles.css";
@@ -67,9 +67,8 @@ function UserPhotos() {
       {photos.map((photo) => (
         <Card 
           key={photo._id} 
-          className="photo-card"
+          className={`photo-card ${advancedFeatures ? "clickable" : ""}`}
           onClick={() => advancedFeatures && handlePhotoClick(photo._id)}
-          sx={{ cursor: advancedFeatures ? 'pointer' : 'default' }}
         >
           <CardMedia
             component="img"
@@ -88,18 +87,18 @@ function UserPhotos() {
               </Typography>
               {photo.comments && photo.comments.map((comment) => (
                 <Card key={comment._id} className="comment-card">
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography variant="body2" color="textSecondary" className="comment-date-user">
                     {formatDate(comment.date_time)} - 
                     <Link
                       component={RouterLink}
                       to={`/users/${comment.user._id}`}
                       color="primary"
-                      sx={{ ml: 1 }}
+                      className="comment-user-link"
                     >
                       {comment.user.first_name} {comment.user.last_name}
                     </Link>
                   </Typography>
-                  <Typography variant="body1" sx={{ mt: 1 }}>
+                  <Typography variant="body1" className="comment-text">
                     {comment.comment}
                   </Typography>
                 </Card>

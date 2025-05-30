@@ -1,0 +1,55 @@
+.photo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.photo-card {
+  width: 80%;
+  cursor: default;
+  transition: box-shadow 0.3s ease;
+}
+
+.photo-card.clickable {
+  cursor: pointer;
+}
+
+.photo-card.clickable:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.photo-image {
+  height: auto;
+  object-fit: cover;
+}
+
+.comment-section {
+  margin-top: 16px;
+}
+
+.comment-card {
+  margin-bottom: 12px;
+  padding: 8px;
+  background-color: #f9f9f9;
+}
+
+.comment-date-user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+}
+
+.comment-user-link {
+  margin-left: 4px;
+  text-decoration: none;
+}
+
+.comment-user-link:hover {
+  text-decoration: underline;
+}
+
+.comment-text {
+  margin-top: 8px;
+}

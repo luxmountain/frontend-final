@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import PhotoUploadDialog from "../PhotoUploadDialog";
 import models from "../../modelData/models";
@@ -12,22 +12,18 @@ function TopBar() {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [contextText, setContextText] = useState("");
-  const [advancedFeatures, setAdvancedFeatures] = useState(() => {
-    const stored = localStorage.getItem('advancedFeatures');
-    return stored === 'true';
-  });
 
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
-      const pathParts = location.pathname.split("/").filter(Boolean); // lọc bỏ phần rỗng
+      const pathParts = location.pathname.split("/").filter(Boolean);
 
       if (
         (pathParts[0] === "users" || pathParts[0] === "photos") &&
-        pathParts.length === 2 // phải có đúng 2 phần, đảm bảo có id
+        pathParts.length === 2
       ) {
-        const userId = pathParts[1]; // lấy đúng id
+        const userId = pathParts[1];
         try {
           const user = await models.userModel(userId);
           if (user) {
@@ -51,12 +47,6 @@ function TopBar() {
     fetchUser();
   }, [location, currentUser]);
 
-  const handleAdvancedFeaturesChange = (event) => {
-    const newValue = event.target.checked;
-    setAdvancedFeatures(newValue);
-    localStorage.setItem('advancedFeatures', newValue);
-    window.dispatchEvent(new Event('storage'));
-  };
   const handleLogout = () => {
     logout();
   };
@@ -72,10 +62,9 @@ function TopBar() {
 
   return (
     <AppBar position="fixed">
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* Left side: User name and controls */}
+      <Toolbar className="appbar-toolbar">
         {currentUser && (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box className="left-controls">
             <Typography variant="body1">
               Hi {currentUser.first_name}
             </Typography>
@@ -85,22 +74,12 @@ function TopBar() {
             >
               Add Photo
             </Button>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={advancedFeatures}
-                  onChange={handleAdvancedFeaturesChange}
-                />
-              }
-              label="Enable Advanced Features"
-            />
             <Button color="inherit" onClick={handleLogout}>
               Logout
             </Button>
           </Box>
         )}
 
-        {/* Right side: Context text */}
         <Typography variant="h6" component="div">
           {contextText}
         </Typography>

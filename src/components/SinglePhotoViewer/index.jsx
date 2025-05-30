@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { 
-  Typography, 
-  Card, 
-  CardContent, 
-  CardMedia, 
+import {
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
   Link,
   IconButton,
   Box,
@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider
+  Divider,
 } from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
@@ -30,16 +30,16 @@ function SinglePhotoViewer() {
   const [error, setError] = useState("");
   const [photos, setPhotos] = useState(null);
   const [user, setUser] = useState(null);
-  
+
   useEffect(() => {
     const loadData = async () => {
       const userData = await models.userModel(userId);
       const photosData = await models.photoOfUserModel(userId);
       setUser(userData);
       setPhotos(photosData);
-      
+
       if (photoId && photosData) {
-        const index = photosData.findIndex(photo => photo._id === photoId);
+        const index = photosData.findIndex((photo) => photo._id === photoId);
         if (index !== -1) {
           setCurrentPhotoIndex(index);
         }
@@ -55,12 +55,12 @@ function SinglePhotoViewer() {
   const currentPhoto = photos[currentPhotoIndex];
 
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateStr).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -99,10 +99,10 @@ function SinglePhotoViewer() {
             user: {
               _id: currentUser._id,
               first_name: currentUser.first_name,
-              last_name: currentUser.last_name
-            }
-          }
-        ]
+              last_name: currentUser.last_name,
+            },
+          },
+        ],
       };
       updatedPhotos[currentPhotoIndex] = updatedPhoto;
       setPhotos(updatedPhotos);
@@ -114,23 +114,26 @@ function SinglePhotoViewer() {
   };
 
   return (
-    <Card>
+    <Card className="single-photo-card">
       <CardMedia
         component="img"
         image={`/images/${currentPhoto.file_name}`}
         alt={`Photo by ${user.first_name} ${user.last_name}`}
-        style={{ maxHeight: '500px', objectFit: 'contain' }}
+        className="single-photo-image"
       />
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <IconButton onClick={handlePrevious} disabled={currentPhotoIndex === 0}>
+        <Box className="photo-nav-bar">
+          <IconButton
+            onClick={handlePrevious}
+            disabled={currentPhotoIndex === 0}
+          >
             <ArrowBack />
           </IconButton>
           <Typography variant="body2" color="textSecondary">
             Posted on {formatDate(currentPhoto.date_time)}
           </Typography>
-          <IconButton 
-            onClick={handleNext} 
+          <IconButton
+            onClick={handleNext}
             disabled={currentPhotoIndex === photos.length - 1}
           >
             <ArrowForward />
@@ -138,10 +141,12 @@ function SinglePhotoViewer() {
         </Box>
 
         <Paper elevation={0} variant="outlined" sx={{ p: 2, mb: 2 }}>
-          <Typography variant="h6" gutterBottom>Comments</Typography>
-          
+          <Typography variant="h6" gutterBottom>
+            Comments
+          </Typography>
+
           <form onSubmit={handleAddComment}>
-            <Box sx={{ mb: 2 }}>
+            <Box className="comment-form">
               <TextField
                 fullWidth
                 multiline
@@ -153,10 +158,10 @@ function SinglePhotoViewer() {
                 error={!!error}
                 helperText={error}
               />
-              <Box sx={{ mt: 1 }}>
-                <Button 
-                  type="submit" 
-                  variant="contained" 
+              <Box className="comment-submit-button">
+                <Button
+                  type="submit"
+                  variant="contained"
                   color="primary"
                   disabled={!newComment.trim()}
                 >
@@ -172,8 +177,8 @@ function SinglePhotoViewer() {
                 <ListItem alignItems="flex-start">
                   <ListItemText
                     primary={
-                      <Link 
-                        component={RouterLink} 
+                      <Link
+                        component={RouterLink}
                         to={`/users/${comment.user._id}`}
                         color="primary"
                       >
@@ -182,11 +187,19 @@ function SinglePhotoViewer() {
                     }
                     secondary={
                       <>
-                        <Typography component="span" variant="body2" color="textPrimary">
+                        <Typography
+                          component="span"
+                          variant="body2"
+                          color="textPrimary"
+                        >
                           {comment.comment}
                         </Typography>
                         <br />
-                        <Typography component="span" variant="caption" color="textSecondary">
+                        <Typography
+                          component="span"
+                          variant="caption"
+                          color="textSecondary"
+                        >
                           {formatDate(comment.date_time)}
                         </Typography>
                       </>
