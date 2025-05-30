@@ -22,12 +22,12 @@ const models = {
     });
   },
 
-  addCommentToPhoto: async (photoId, comment) => {
-    return await fetchModel(`/commentsOfPhoto/${photoId}`, {
+  addCommentToPhoto: async (photoId, comment, userId) => {
+    return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ comment }),
+      body: JSON.stringify({ comment, user_id: userId }),
     });
   },
 

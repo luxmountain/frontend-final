@@ -10,6 +10,9 @@ import {
 } from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import "./styles.css";
+import TextField from "@mui/material/TextField";
+import models from "../../modelData/models";
+import { useAuth } from "../../context/AuthContext";
 
 function PhotoStepper({ user, photos }) {
   const { photoId, userId } = useParams();
@@ -19,6 +22,9 @@ function PhotoStepper({ user, photos }) {
   const [currentIndex, setCurrentIndex] = useState(
     initialIndex !== -1 ? initialIndex : 0
   );
+  const { currentUser } = useAuth();
+  const [commentText, setCommentText] = useState("");
+  const [photoList, setPhotoList] = useState(photos);
 
   useEffect(() => {
     const newIndex = photos.findIndex((p) => p._id === photoId);
@@ -43,7 +49,27 @@ function PhotoStepper({ user, photos }) {
 
   if (!photos.length) return <Typography>Loading photos...</Typography>;
 
-  const photo = photos[currentIndex];
+  const photo = photoList[currentIndex];
+
+  const handleAddComment = async () => {
+    const trimmed = commentText.trim();
+    if (!trimmed) return alert("Comment cannot be empty");
+
+    try {
+      const updatedPhoto = await models.addCommentToPhoto(
+        photo._id,
+        trimmed,
+        currentUser._id
+      );
+
+      const updated = [...photoList];
+      updated[currentIndex] = updatedPhoto;
+      setPhotoList(updated);
+      setCommentText("");
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
+  };
 
   return (
     <Box className="photo-stepper-container">
@@ -90,6 +116,26 @@ function PhotoStepper({ user, photos }) {
                   </Typography>
                 </Card>
               ))}
+
+            {currentUser && (
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  label="Add a comment"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 1 }}
+                  onClick={handleAddComment}
+                >
+                  Post
+                </Button>
+              </Box>
+            )}
           </div>
         </CardContent>
       </Card>
