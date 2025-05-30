@@ -105,8 +105,7 @@ function LoginRegister() {
         description: registerForm.description,
         occupation: registerForm.occupation,
       });
-
-      if (res && res.success) {
+      if (res) {
         setRegisterSuccess("Registration successful! You can now log in.");
         setRegisterForm({
           loginName: "",
@@ -118,7 +117,7 @@ function LoginRegister() {
           description: "",
           occupation: "",
         });
-        setIsLogin(true); // Switch to login view
+        setIsLogin(true);
       } else {
         setRegisterError(res.message || "Registration failed");
       }
