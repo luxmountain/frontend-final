@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Card, CardContent, CardMedia, Link } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Link,
+} from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
+import PhotoStepper from "../PhotoStepper";
 import "./styles.css";
 
 function UserPhotos() {
-  const { userId } = useParams();
+  const { userId, photoId } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [photos, setPhotos] = useState([]);
@@ -29,26 +36,18 @@ function UserPhotos() {
   }, [userId]);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const storedValue = localStorage.getItem('advancedFeatures');
-      setAdvancedFeatures(storedValue === 'true');
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    handleStorageChange();
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    const storedValue =
+      localStorage.getItem("advancedFeaturesEnabled") || "false";
+    setAdvancedFeatures(storedValue === "true");
   }, []);
 
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateStr).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -62,11 +61,20 @@ function UserPhotos() {
     return <Typography variant="h4">Loading photos...</Typography>;
   }
 
+  if (advancedFeatures && photoId) {
+    return <PhotoStepper user={user} photos={photos} />;
+  }
+
+  if (advancedFeatures && !photoId) {
+    navigate(`/photos/${userId}/${photos[0]._id}`, { replace: true });
+    return null;
+  }
+
   return (
     <div className="photo-container">
       {photos.map((photo) => (
-        <Card 
-          key={photo._id} 
+        <Card
+          key={photo._id}
           className={`photo-card ${advancedFeatures ? "clickable" : ""}`}
           onClick={() => advancedFeatures && handlePhotoClick(photo._id)}
         >
@@ -85,24 +93,29 @@ function UserPhotos() {
               <Typography variant="h6" gutterBottom>
                 Comments
               </Typography>
-              {photo.comments && photo.comments.map((comment) => (
-                <Card key={comment._id} className="comment-card">
-                  <Typography variant="body2" color="textSecondary" className="comment-date-user">
-                    {formatDate(comment.date_time)} - 
-                    <Link
-                      component={RouterLink}
-                      to={`/users/${comment.user._id}`}
-                      color="primary"
-                      className="comment-user-link"
+              {photo.comments &&
+                photo.comments.map((comment) => (
+                  <Card key={comment._id} className="comment-card">
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      className="comment-date-user"
                     >
-                      {comment.user.first_name} {comment.user.last_name}
-                    </Link>
-                  </Typography>
-                  <Typography variant="body1" className="comment-text">
-                    {comment.comment}
-                  </Typography>
-                </Card>
-              ))}
+                      {formatDate(comment.date_time)} -{" "}
+                      <Link
+                        component={RouterLink}
+                        to={`/users/${comment.user._id}`}
+                        color="primary"
+                        className="comment-user-link"
+                      >
+                        {comment.user.first_name} {comment.user.last_name}
+                      </Link>
+                    </Typography>
+                    <Typography variant="body1" className="comment-text">
+                      {comment.comment}
+                    </Typography>
+                  </Card>
+                ))}
             </div>
           </CardContent>
         </Card>

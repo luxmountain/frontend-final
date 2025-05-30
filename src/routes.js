@@ -28,7 +28,7 @@ const routes = [
     ],
   },
   {
-    path: '/photos/:userId',
+    path: '/photos/:userId/:photoId?',
     element: UserPhotos,
     protected: true,
     label: 'User Photos',

@@ -75,6 +75,15 @@ function TopBar() {
     const checked = event.target.checked;
     setAdvancedFeaturesEnabled(checked);
     localStorage.setItem("advancedFeaturesEnabled", checked);
+
+    const pathParts = location.pathname.split("/").filter(Boolean);
+
+    if (pathParts[0] === "photos" && pathParts[1]) {
+      const userId = pathParts[1];
+
+      navigate(`/photos/${userId}`, { replace: true });
+      window.location.reload();
+    }
   };
 
   return (
