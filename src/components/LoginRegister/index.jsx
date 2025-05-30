@@ -64,7 +64,7 @@ function LoginRegister() {
         );
 
         await login(res._id);
-        navigate("/photos/" + res._id);
+        navigate(`/users/${res._id}`);
       } else {
         setLoginError(res.error || "Invalid credentials");
       }

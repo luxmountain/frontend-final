@@ -35,13 +35,18 @@ function TopBar() {
         try {
           const user = await models.userModel(userId);
           if (user) {
+            const fullName = `${user.first_name} ${user.last_name}`;
             if (pathParts[0] === "photos") {
-              setContextText(`Photos of ${user.first_name} ${user.last_name}`);
+              setContextText(
+                user._id === currentUser._id
+                  ? "My Photos"
+                  : `Photos of ${fullName}`
+              );
             } else {
-              setContextText(`${user.first_name} ${user.last_name}`);
+              setContextText(
+                user._id === currentUser._id ? "My Profile" : fullName
+              );
             }
-          } else {
-            setContextText("");
           }
         } catch (error) {
           console.error("Error fetching user:", error);
@@ -90,7 +95,13 @@ function TopBar() {
       <Toolbar className="appbar-toolbar">
         {currentUser && (
           <Box className="left-controls">
-            <Typography variant="body1">Hi {currentUser.first_name}</Typography>
+            <Typography
+              variant="body1"
+              onClick={() => navigate(`/users/${currentUser._id}`)}
+              sx={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              Hi {currentUser.first_name}
+            </Typography>
             <Button color="inherit" onClick={() => setUploadDialogOpen(true)}>
               Add Photo
             </Button>

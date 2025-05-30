@@ -8,13 +8,15 @@ import {
   Badge,
   Box,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
 import "./styles.css";
+import { useAuth } from "../../context/AuthContext";
 
 function UserList({ showBadges = false }) {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     async function loadUsers() {
@@ -28,12 +30,16 @@ function UserList({ showBadges = false }) {
     loadUsers();
   }, []);
 
-  if (!users.length) return <div>No users found.</div>;
+  const filteredUsers = currentUser
+    ? users.filter((user) => user._id !== currentUser._id)
+    : users;
+
+  if (!filteredUsers.length) return <div>No users found.</div>;
 
   return (
     <div className="user-list">
       <List component="nav">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <React.Fragment key={user._id}>
             <ListItem disablePadding className="user-list-item">
               <ListItemButton onClick={() => navigate(`/users/${user._id}`)}>
