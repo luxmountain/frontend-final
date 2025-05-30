@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AuthPage = React.lazy(() => import('./pages/auth'));
+const AuthPage = React.lazy(() => import('./components/LoginRegister'));
 const UserList = React.lazy(() => import('./components/UserList'));
 const UserDetail = React.lazy(() => import('./components/UserDetail'));
 const UserPhotos = React.lazy(() => import('./components/UserPhotos'));

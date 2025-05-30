@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import models from "../modelData/models";
-import { useAuth } from '../context/AuthContext';
+import models from "../../modelData/models";
+import { useAuth } from '../../context/AuthContext';
 
 function LoginRegister() {
   const [isLogin, setIsLogin] = useState(true);
