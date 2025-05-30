@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Paper,
   TextField,
@@ -7,104 +7,91 @@ import {
   Box,
   Alert,
   IconButton,
-  InputAdornment
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+  InputAdornment,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 
 function LoginRegister() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [loginForm, setLoginForm] = useState({
-    loginName: '',
-    password: '',
+    loginName: "",
+    password: "",
   });
-  const [loginError, setLoginError] = useState('');
 
   const [registerForm, setRegisterForm] = useState({
-    loginName: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    location: '',
-    description: '',
-    occupation: ''
+    loginName: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    location: "",
+    description: "",
+    occupation: "",
   });
-  const [registerError, setRegisterError] = useState('');
-  const [registerSuccess, setRegisterSuccess] = useState('');
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setLoginError('');
+    setLoginError("");
 
     if (!loginForm.loginName.trim() || !loginForm.password.trim()) {
-      setLoginError('Please enter both login name and password');
+      setLoginError("Please enter both login name and password");
       return;
-    }
-
-    try {
-      // In a real app, you would validate the password here
-      // For this demo, we'll just check if the user exists
-      const user = await models.userModel(loginForm.loginName);
-      if (user) {
-        const success = await login(loginForm.loginName);
-        if (success) {
-          navigate('/photos/' + loginForm.loginName);
-        } else {
-          setLoginError('Failed to login');
-        }
-      } else {
-        setLoginError('User not found');
-      }
-    } catch (error) {
-      setLoginError('An error occurred during login');
     }
 
     try {
       const res = await models.login(loginForm.loginName, loginForm.password);
 
-      // API trả về { _id, first_name, last_name, token }
       if (res && res.token) {
-        // Lưu token vào localStorage
         localStorage.setItem("token", res.token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: res._id,
+            first_name: res.first_name,
+            last_name: res.last_name,
+          })
+        );
 
-        // Bạn có thể lưu thêm thông tin user nếu cần
-        localStorage.setItem("user", JSON.stringify({
-          _id: res._id,
-          first_name: res.first_name,
-          last_name: res.last_name
-        }));
-
-        navigate('/users');
+        await login(res._id);
+        navigate("/photos/" + res._id);
       } else {
-        setLoginError(res.error || 'Invalid credentials');
+        setLoginError(res.error || "Invalid credentials");
       }
     } catch (error) {
-      setLoginError('Login failed: ' + (error.message || error.toString()));
+      setLoginError("Login failed: " + (error.message || error.toString()));
     }
   };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    setRegisterError('');
-    setRegisterSuccess('');
+    setRegisterError("");
+    setRegisterSuccess("");
 
     if (registerForm.password !== registerForm.confirmPassword) {
-      setRegisterError('Passwords do not match');
+      setRegisterError("Passwords do not match");
       return;
     }
 
     if (
-      !registerForm.loginName || !registerForm.password ||
-      !registerForm.firstName || !registerForm.lastName
+      !registerForm.loginName ||
+      !registerForm.password ||
+      !registerForm.firstName ||
+      !registerForm.lastName
     ) {
-      setRegisterError('Login name, password, first name, and last name are required');
+      setRegisterError(
+        "Login name, password, first name, and last name are required"
+      );
       return;
     }
 
@@ -119,74 +106,85 @@ function LoginRegister() {
         occupation: registerForm.occupation,
       });
 
-      // Giả sử API trả về { success: boolean, message?: string }
       if (res && res.success) {
-        setRegisterSuccess('Registration successful! You can now log in.');
+        setRegisterSuccess("Registration successful! You can now log in.");
         setRegisterForm({
-          loginName: '',
-          password: '',
-          confirmPassword: '',
-          firstName: '',
-          lastName: '',
-          location: '',
-          description: '',
-          occupation: ''
+          loginName: "",
+          password: "",
+          confirmPassword: "",
+          firstName: "",
+          lastName: "",
+          location: "",
+          description: "",
+          occupation: "",
         });
-        navigate('/login');
+        setIsLogin(true); // Switch to login view
       } else {
-        setRegisterError(res.message || 'Registration failed');
+        setRegisterError(res.message || "Registration failed");
       }
     } catch (error) {
-      setRegisterError('Registration failed: ' + (error.message || error.toString()));
+      setRegisterError(
+        "Registration failed: " + (error.message || error.toString())
+      );
     }
   };
 
   const handleLoginChange = (field) => (e) => {
-    setLoginForm(prev => ({ ...prev, [field]: e.target.value }));
+    setLoginForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleRegisterChange = (field) => (e) => {
-    setRegisterForm(prev => ({ ...prev, [field]: e.target.value }));
+    setRegisterForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh" p={2}>
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 500, width: '100%' }}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="80vh"
+      p={2}
+    >
+      <Paper elevation={3} sx={{ p: 4, maxWidth: 500, width: "100%" }}>
         <Box mb={3}>
           <Typography variant="h5" component="h1" gutterBottom>
-            {isLogin ? 'Login' : 'Register'}
+            {isLogin ? "Login" : "Register"}
           </Typography>
           <Button
             onClick={() => {
               setIsLogin(!isLogin);
-              setLoginError('');
-              setRegisterError('');
-              setRegisterSuccess('');
+              setLoginError("");
+              setRegisterError("");
+              setRegisterSuccess("");
             }}
             sx={{ mt: 1 }}
           >
-            {isLogin ? 'Need to register?' : 'Already have an account?'}
+            {isLogin ? "Need to register?" : "Already have an account?"}
           </Button>
         </Box>
 
         {isLogin ? (
           <form onSubmit={handleLoginSubmit}>
-            {loginError && <Alert severity="error" sx={{ mb: 2 }}>{loginError}</Alert>}
+            {loginError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {loginError}
+              </Alert>
+            )}
             <TextField
               fullWidth
               label="Login Name"
               variant="outlined"
               value={loginForm.loginName}
-              onChange={handleLoginChange('loginName')}
+              onChange={handleLoginChange("loginName")}
               margin="normal"
             />
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               value={loginForm.password}
-              onChange={handleLoginChange('password')}
+              onChange={handleLoginChange("password")}
               margin="normal"
               InputProps={{
                 endAdornment: (
@@ -198,14 +196,28 @@ function LoginRegister() {
                 ),
               }}
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
               Login
             </Button>
           </form>
         ) : (
           <form onSubmit={handleRegisterSubmit}>
-            {registerError && <Alert severity="error" sx={{ mb: 2 }}>{registerError}</Alert>}
-            {registerSuccess && <Alert severity="success" sx={{ mb: 2 }}>{registerSuccess}</Alert>}
+            {registerError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {registerError}
+              </Alert>
+            )}
+            {registerSuccess && (
+              <Alert severity="success" sx={{ mb: 2 }}>
+                {registerSuccess}
+              </Alert>
+            )}
 
             <TextField
               fullWidth
@@ -213,17 +225,17 @@ function LoginRegister() {
               label="Login Name"
               variant="outlined"
               value={registerForm.loginName}
-              onChange={handleRegisterChange('loginName')}
+              onChange={handleRegisterChange("loginName")}
               margin="normal"
             />
             <TextField
               fullWidth
               required
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               variant="outlined"
               value={registerForm.password}
-              onChange={handleRegisterChange('password')}
+              onChange={handleRegisterChange("password")}
               margin="normal"
               InputProps={{
                 endAdornment: (
@@ -239,15 +251,19 @@ function LoginRegister() {
               fullWidth
               required
               label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               variant="outlined"
               value={registerForm.confirmPassword}
-              onChange={handleRegisterChange('confirmPassword')}
+              onChange={handleRegisterChange("confirmPassword")}
               margin="normal"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                    <IconButton
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
@@ -260,7 +276,7 @@ function LoginRegister() {
               label="First Name"
               variant="outlined"
               value={registerForm.firstName}
-              onChange={handleRegisterChange('firstName')}
+              onChange={handleRegisterChange("firstName")}
               margin="normal"
             />
             <TextField
@@ -269,7 +285,7 @@ function LoginRegister() {
               label="Last Name"
               variant="outlined"
               value={registerForm.lastName}
-              onChange={handleRegisterChange('lastName')}
+              onChange={handleRegisterChange("lastName")}
               margin="normal"
             />
             <TextField
@@ -277,7 +293,7 @@ function LoginRegister() {
               label="Location"
               variant="outlined"
               value={registerForm.location}
-              onChange={handleRegisterChange('location')}
+              onChange={handleRegisterChange("location")}
               margin="normal"
             />
             <TextField
@@ -285,7 +301,7 @@ function LoginRegister() {
               label="Occupation"
               variant="outlined"
               value={registerForm.occupation}
-              onChange={handleRegisterChange('occupation')}
+              onChange={handleRegisterChange("occupation")}
               margin="normal"
             />
             <TextField
@@ -295,10 +311,16 @@ function LoginRegister() {
               label="Description"
               variant="outlined"
               value={registerForm.description}
-              onChange={handleRegisterChange('description')}
+              onChange={handleRegisterChange("description")}
               margin="normal"
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ mt: 2 }}
+            >
               Register Me
             </Button>
           </form>
