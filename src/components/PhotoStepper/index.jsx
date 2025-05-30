@@ -71,6 +71,8 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
+  const BACKEND_URL = "http://localhost:8081";
+
   return (
     <Box className="photo-stepper-container">
       <Typography variant="h5" gutterBottom>
@@ -80,7 +82,7 @@ function PhotoStepper({ user, photos }) {
       <Card className="photo-stepper-card">
         <CardMedia
           component="img"
-          image={`/images/${photo.file_name}`}
+          image={`${BACKEND_URL}/images/${photo.file_name}`}
           alt={`Photo by ${user.first_name}`}
           className="photo-image"
           loading="lazy"

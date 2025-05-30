@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Link,
-} from "@mui/material";
+import { Typography, Card, CardContent, CardMedia, Link } from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
 import PhotoStepper from "../PhotoStepper";
@@ -69,7 +63,7 @@ function UserPhotos() {
     navigate(`/photos/${userId}/${photos[0]._id}`, { replace: true });
     return null;
   }
-
+  const BACKEND_URL = "http://localhost:8081";
   return (
     <div className="photo-container">
       {photos.map((photo) => (
@@ -80,7 +74,7 @@ function UserPhotos() {
         >
           <CardMedia
             component="img"
-            image={`/images/${photo.file_name}`}
+            image={`${BACKEND_URL}/images/${photo.file_name}`}
             alt={`Photo by ${user.first_name}`}
             className="photo-image"
             loading="lazy"
