@@ -117,7 +117,10 @@ function LoginRegister() {
           description: "",
           occupation: "",
         });
-        setIsLogin(true);
+        setTimeout(() => {
+          setIsLogin(true);
+          setRegisterSuccess("");
+        }, 2000);
       } else {
         setRegisterError(res.message || "Registration failed");
       }
