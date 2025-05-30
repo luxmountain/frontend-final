@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import models from "../../modelData/models";
 import "./styles.css"; // Đảm bảo có style phù hợp
 
-function UserList() {
+function UserList({ showBadges = false }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -43,31 +43,33 @@ function UserList() {
                       secondary={user.occupation}
                     />
                   </Box>
-                  <Box className="user-list-badges">
-                    {" "}
-                    <Link
-                      to={`/photos/${user._id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Badge
-                        badgeContent={user.photoCount || 0}
-                        color="success"
-                        sx={{ cursor: "pointer", mr: 1 }}
-                      />
-                    </Link>
-                    <Link
-                      to={`/comments/${user._id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Badge
-                        badgeContent={user.commentCount || 0}
-                        color="error"
-                        sx={{ cursor: "pointer" }}
-                      />
-                    </Link>
-                  </Box>
+                  {showBadges && (
+                    <Box className="user-list-badges">
+                      {" "}
+                      <Link
+                        to={`/photos/${user._id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Badge
+                          badgeContent={user.photoCount || 0}
+                          color="success"
+                          sx={{ cursor: "pointer", mr: 1 }}
+                        />
+                      </Link>
+                      <Link
+                        to={`/comments/${user._id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Badge
+                          badgeContent={user.commentCount || 0}
+                          color="error"
+                          sx={{ cursor: "pointer" }}
+                        />
+                      </Link>
+                    </Box>
+                  )}
                 </Box>
               </ListItemButton>
             </ListItem>
