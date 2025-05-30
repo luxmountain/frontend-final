@@ -115,12 +115,14 @@ function TopBar() {
         </Typography>
       </Toolbar>
 
-      <PhotoUploadDialog
-        open={uploadDialogOpen}
-        onClose={() => setUploadDialogOpen(false)}
-        onSuccess={handlePhotoUploadSuccess}
-        userId={currentUser._id}
-      />
+      {currentUser && (
+        <PhotoUploadDialog
+          open={uploadDialogOpen}
+          onClose={() => setUploadDialogOpen(false)}
+          onSuccess={handlePhotoUploadSuccess}
+          userId={currentUser._id}
+        />
+      )}
     </AppBar>
   );
 }
