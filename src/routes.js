@@ -4,6 +4,7 @@ const AuthPage = React.lazy(() => import('./pages/auth'));
 const UserList = React.lazy(() => import('./components/UserList'));
 const UserDetail = React.lazy(() => import('./components/UserDetail'));
 const UserPhotos = React.lazy(() => import('./components/UserPhotos'));
+const UserComments = React.lazy(() => import('./components/UserComments'));
 
 const routes = [
   {
@@ -31,6 +32,12 @@ const routes = [
     element: UserPhotos,
     protected: true,
     label: 'User Photos',
+  },
+  {
+    path: '/comments/:userId',
+    element: UserComments,
+    protected: true,
+    label: 'User Comments',
   },
   {
     path: '/login',

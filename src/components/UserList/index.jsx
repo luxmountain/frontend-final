@@ -44,14 +44,29 @@ function UserList() {
                     />
                   </Box>
                   <Box className="user-list-badges">
-                    <Badge
-                      badgeContent={user.photoCount || 0}
-                      color="success"
-                    />
-                    <Badge
-                      badgeContent={user.commentCount || 0}
-                      color="error"
-                    />
+                    {" "}
+                    <Link
+                      to={`/photos/${user._id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Badge
+                        badgeContent={user.photoCount || 0}
+                        color="success"
+                        sx={{ cursor: "pointer", mr: 1 }}
+                      />
+                    </Link>
+                    <Link
+                      to={`/comments/${user._id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Badge
+                        badgeContent={user.commentCount || 0}
+                        color="error"
+                        sx={{ cursor: "pointer" }}
+                      />
+                    </Link>
                   </Box>
                 </Box>
               </ListItemButton>
