@@ -72,18 +72,13 @@ function TopBar() {
 
   return (
     <AppBar position="fixed">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          {contextText}
-        </Typography>
-
-        {/* Nếu không có currentUser thì ẩn toàn bộ phần user controls */}
-        {/* Nếu muốn có thì truyền currentUser qua props và bỏ comment */}
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        {/* Left side: User name and controls */}
         {currentUser && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* <Typography variant="body1">
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography variant="body1">
               Hi {currentUser.first_name}
-            </Typography> */}
+            </Typography>
             <Button
               color="inherit"
               onClick={() => setUploadDialogOpen(true)}
@@ -96,13 +91,19 @@ function TopBar() {
                   checked={advancedFeatures}
                   onChange={handleAdvancedFeaturesChange}
                 />
-              } label="Enable Advanced Features"
+              }
+              label="Enable Advanced Features"
             />
             <Button color="inherit" onClick={handleLogout}>
               Logout
             </Button>
           </Box>
         )}
+
+        {/* Right side: Context text */}
+        <Typography variant="h6" component="div">
+          {contextText}
+        </Typography>
       </Toolbar>
 
       <PhotoUploadDialog

@@ -7,9 +7,9 @@ const Layout = ({ children }) => {
       <aside
         style={{
           width: "250px",
-          height: "100vh",
+          height: "calc(100vh - 64px)",
           position: "fixed",
-          top: 64,
+          top: "64px",
           left: 0,
           overflowY: "auto",
           borderRight: "1px solid #ccc",
