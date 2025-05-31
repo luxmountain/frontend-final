@@ -94,33 +94,36 @@ function TopBar() {
     <AppBar position="fixed">
       <Toolbar className="appbar-toolbar">
         {currentUser && (
-          <Box className="left-controls">
-            <Typography
-              variant="body1"
-              onClick={() => navigate(`/users/${currentUser._id}`)}
-              sx={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              Hi {currentUser.first_name}
-            </Typography>
-            <Button color="inherit" onClick={() => setUploadDialogOpen(true)}>
-              Add Photo
-            </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
-          </Box>
-        )}
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={advancedFeaturesEnabled}
-              onChange={handleAdvancedFeaturesChange}
-              color="inherit"
+          <>
+            <Box className="left-controls">
+              <Typography
+                variant="body1"
+                onClick={() => navigate(`/users/${currentUser._id}`)}
+                sx={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                Hi {currentUser.first_name}
+              </Typography>
+              <Button color="inherit" onClick={() => setUploadDialogOpen(true)}>
+                Add Photo
+              </Button>
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            </Box>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={advancedFeaturesEnabled}
+                  onChange={handleAdvancedFeaturesChange}
+                  color="inherit"
+                />
+              }
+              label="Enable Advanced Features"
+              sx={{ color: "white", ml: 2 }}
             />
-          }
-          label="Enable Advanced Features"
-          sx={{ color: "white", ml: 2 }}
-        />
+          </>
+        )}
+
         <Typography variant="h6" component="div">
           {contextText}
         </Typography>

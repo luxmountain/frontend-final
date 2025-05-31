@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
             const user = await models.userModel(userId);
             if (user) {
                 setCurrentUser(user);
-                // Lưu toàn bộ user object thành JSON string trong localStorage
+                localStorage.setItem("advancedFeaturesEnabled", false);
                 localStorage.setItem('user', JSON.stringify(user));
                 return true;
             }

@@ -55,7 +55,9 @@ function UserComments() {
         {comments.map((comment) => (
           <Grid item xs={12} sm={6} md={4} key={comment.comment_id}>
             <Card>
-              <CardActionArea onClick={() => handlePhotoClick(comment.photo_id)}>
+              <CardActionArea
+                onClick={() => handlePhotoClick(comment.photo_id)}
+              >
                 <CardMedia
                   component="img"
                   image={`${BACKEND_URL}/images/${comment.file_name}`}
