@@ -105,6 +105,8 @@ function LoginRegister() {
         description: registerForm.description,
         occupation: registerForm.occupation,
       });
+
+      console.log(res);
       if (res) {
         setRegisterSuccess("Registration successful! You can now log in.");
         setRegisterForm({
@@ -122,7 +124,7 @@ function LoginRegister() {
           setRegisterSuccess("");
         }, 2000);
       } else {
-        setRegisterError(res.message || "Registration failed");
+        setRegisterError("Login name already exists");
       }
     } catch (error) {
       setRegisterError(
