@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Card, CardContent, CardMedia, Link } from "@mui/material";
+import {
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Link,
+  Box,
+  TextField,
+  Button,
+} from "@mui/material";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
 import PhotoStepper from "../PhotoStepper";
 import "./styles.css";
+import { useAuth } from "../../context/AuthContext";
 
 function UserPhotos() {
   const { userId, photoId } = useParams();
@@ -11,6 +21,8 @@ function UserPhotos() {
   const [user, setUser] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [advancedFeatures, setAdvancedFeatures] = useState(false);
+  const [commentTexts, setCommentTexts] = useState({});
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
@@ -34,6 +46,30 @@ function UserPhotos() {
 
     fetchData();
   }, [userId]);
+
+  const handleCommentChange = (photoId, value) => {
+    setCommentTexts((prev) => ({ ...prev, [photoId]: value }));
+  };
+
+  const handleAddComment = async (photoId) => {
+    const text = commentTexts[photoId]?.trim();
+    if (!text) return alert("Comment cannot be empty");
+
+    try {
+      const updatedPhoto = await models.addCommentToPhoto(
+        photoId,
+        text,
+        currentUser._id
+      );
+
+      setPhotos((prevPhotos) =>
+        prevPhotos.map((p) => (p._id === photoId ? updatedPhoto : p))
+      );
+      setCommentTexts((prev) => ({ ...prev, [photoId]: "" }));
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+    }
+  };
 
   useEffect(() => {
     const storedValue =
@@ -69,7 +105,9 @@ function UserPhotos() {
     navigate(`/photos/${userId}/${photos[0]._id}`, { replace: true });
     return null;
   }
+
   const BACKEND_URL = "http://localhost:8081";
+
   return (
     <div className="photo-container">
       {photos.map((photo) => (
@@ -93,30 +131,55 @@ function UserPhotos() {
               <Typography variant="h6" gutterBottom>
                 Comments
               </Typography>
+              
               {photo.comments &&
-                photo.comments.map((comment) => (
-                  <Card key={comment._id} className="comment-card">
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      className="comment-date-user"
-                    >
-                      {formatDate(comment.date_time)} -{" "}
-                      <Link
-                        component={RouterLink}
-                        to={`/users/${comment.user._id}`}
-                        color="primary"
-                        className="comment-user-link"
+                [...photo.comments]
+                  .sort((a, b) => new Date(b.date_time) - new Date(a.date_time))
+                  .map((comment) => (
+                    <Card key={comment._id} className="comment-card">
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        className="comment-date-user"
                       >
-                        {comment.user.first_name} {comment.user.last_name}
-                      </Link>
-                    </Typography>
-                    <Typography variant="body1" className="comment-text">
-                      {comment.comment}
-                    </Typography>
-                  </Card>
-                ))}
+                        {formatDate(comment.date_time)} -{" "}
+                        <Link
+                          component={RouterLink}
+                          to={`/users/${comment.user._id}`}
+                          color="primary"
+                          className="comment-user-link"
+                        >
+                          {comment.user.first_name} {comment.user.last_name}
+                        </Link>
+                      </Typography>
+                      <Typography variant="body1" className="comment-text">
+                        {comment.comment}
+                      </Typography>
+                    </Card>
+                  ))}
             </div>
+
+            {currentUser && (
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  label="Add a comment"
+                  value={commentTexts[photo._id] || ""}
+                  onChange={(e) =>
+                    handleCommentChange(photo._id, e.target.value)
+                  }
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 1 }}
+                  onClick={() => handleAddComment(photo._id)}
+                >
+                  Post
+                </Button>
+              </Box>
+            )}
           </CardContent>
         </Card>
       ))}
