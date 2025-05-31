@@ -65,10 +65,18 @@ function TopBar() {
   const handleLogout = () => {
     logout();
   };
+  
+  const handlePhotoUploadSuccess = (uploadedPhoto) => {
+    if (uploadedPhoto && uploadedPhoto._id) {
+      // Navigate thẳng tới ảnh vừa upload
+      navigate(
+        `/photos/${uploadedPhoto.userId || currentUser._id}/${
+          uploadedPhoto._id
+        }`,
+        { replace: true }
+      );
 
-  const handlePhotoUploadSuccess = () => {
-    const pathParts = location.pathname.split("/");
-    if (pathParts.includes("photos")) {
+      // Hoặc reload trang nếu cần thiết
       window.location.reload();
     } else if (currentUser && currentUser._id) {
       navigate(`/photos/${currentUser._id}`);
@@ -135,6 +143,7 @@ function TopBar() {
           onClose={() => setUploadDialogOpen(false)}
           onSuccess={handlePhotoUploadSuccess}
           userId={currentUser._id}
+          advancedFeatures={advancedFeaturesEnabled}
         />
       )}
     </AppBar>

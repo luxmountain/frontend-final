@@ -15,7 +15,13 @@ import models from "../../modelData/models";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
 
-function PhotoUploadDialog({ open, onClose, onSuccess, userId }) {
+function PhotoUploadDialog({
+  open,
+  onClose,
+  onSuccess,
+  userId,
+  advancedFeatures,
+}) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -42,11 +48,11 @@ function PhotoUploadDialog({ open, onClose, onSuccess, userId }) {
     setError("");
 
     try {
-      console.log(selectedFile);
-      await models.uploadPhoto(selectedFile, userId);
-      onSuccess();
+      const uploadedPhoto = await models.uploadPhoto(selectedFile, userId);
+
+      onSuccess(uploadedPhoto);
+
       handleClose();
-      navigate(`/photos/${userId}`);
     } catch (error) {
       setError("Failed to upload photo. Please try again.");
     } finally {
