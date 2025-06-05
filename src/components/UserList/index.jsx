@@ -7,6 +7,7 @@ import {
   ListItemText,
   Badge,
   Box,
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
@@ -91,6 +92,11 @@ function UserList({ showBadges = false }) {
           </React.Fragment>
         ))}
       </List>
+      <div className="setting-btn">
+        <Button variant="outlined" onClick={() => navigate("/profile")}>
+          Profile
+        </Button>
+      </div>
     </div>
   );
 }

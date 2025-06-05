@@ -59,6 +59,13 @@ const models = {
       credentials: 'include'
     });
   },
+
+  deleteUser: async (userId) => {
+    return await fetchModel(`/user/${userId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+  },
 };
 
 export default models;

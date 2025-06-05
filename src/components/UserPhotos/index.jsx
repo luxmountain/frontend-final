@@ -94,7 +94,6 @@ function UserPhotos() {
   };
 
   const handleDelete = async (photoId) => {
-    console.log("Delete", photoId);
     try {
       await models.deletePhoto(photoId);
       window.location.reload();

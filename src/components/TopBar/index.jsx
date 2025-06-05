@@ -43,9 +43,7 @@ function TopBar() {
                   : `Photos of ${fullName}`
               );
             } else {
-              setContextText(
-                user._id === currentUser._id ? "My Profile" : fullName
-              );
+              setContextText(fullName);
             }
           }
         } catch (error) {
@@ -65,7 +63,7 @@ function TopBar() {
   const handleLogout = () => {
     logout();
   };
-  
+
   const handlePhotoUploadSuccess = (uploadedPhoto) => {
     if (uploadedPhoto && uploadedPhoto._id) {
       // Navigate thẳng tới ảnh vừa upload

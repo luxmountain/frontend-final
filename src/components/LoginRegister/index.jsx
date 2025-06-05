@@ -124,7 +124,7 @@ function LoginRegister() {
           setRegisterSuccess("");
         }, 2000);
       } else {
-        setRegisterError("Login name already exists");
+        setRegisterError("Registration failed!");
       }
     } catch (error) {
       setRegisterError(

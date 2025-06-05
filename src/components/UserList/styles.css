@@ -22,3 +22,9 @@
     justify-content: space-between;
     width: 100%;
 }
+
+.setting-btn{
+    bottom: 1rem;
+    right: 1rem;
+    position: absolute;
+}
