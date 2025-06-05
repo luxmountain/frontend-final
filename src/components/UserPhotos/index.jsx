@@ -97,8 +97,29 @@ function UserPhotos() {
     try {
       await models.deletePhoto(photoId);
       setPhotos((prev) => prev.filter((p) => p._id !== photoId));
-    } catch (error){
+    } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleDeleteComment = async (photoId, commentId) => {
+    try {
+      await models.deleteComment(photoId, commentId);
+      setPhotos((prevPhotos) =>
+        prevPhotos.map((photo) => {
+          if (photo._id === photoId) {
+            return {
+              ...photo,
+              comments: photo.comments.filter(
+                (comment) => comment._id !== commentId
+              ),
+            };
+          }
+          return photo;
+        })
+      );
+    } catch (error) {
+      console.error("Error delete comment");
     }
   };
 
@@ -106,14 +127,14 @@ function UserPhotos() {
     return <Typography variant="h4">Loading photos...</Typography>;
   }
 
-  if(photos.length === 0){
+  if (photos.length === 0) {
     return (
       <Box p={3}>
         <Typography variant="h5">
           {user.first_name} has not uploaded any photos yet.
         </Typography>
       </Box>
-    )
+    );
   }
 
   if (advancedFeatures && photoId) {
@@ -143,38 +164,52 @@ function UserPhotos() {
             loading="lazy"
           />
           <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              Posted on {formatDate(photo.date_time)}
-            </Typography>
+            <div className="justify-between">
+              <Typography variant="body2" color="textSecondary">
+                Posted on {formatDate(photo.date_time)}
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleDelete(photo._id)}
+              >
+                Delete Post
+              </Button>
+            </div>
             <div className="comment-section">
-              <div className="justify-between">
-                <Typography variant="h6" gutterBottom>
-                  Comments
-                </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={() => handleDelete(photo._id)}>
-                  Delete
-                </Button>
-              </div>
+              <Typography variant="h6" gutterBottom>
+                Comments
+              </Typography>
+
               {photo.comments &&
                 [...photo.comments]
                   .sort((a, b) => new Date(b.date_time) - new Date(a.date_time))
                   .map((comment) => (
                     <Card key={comment._id} className="comment-card">
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        className="comment-date-user"
-                      >
-                        {formatDate(comment.date_time)} -{" "}
-                        <Link
-                          component={RouterLink}
-                          to={`/users/${comment.user._id}`}
-                          color="primary"
-                          className="comment-user-link"
+                      <div className="comment-wrapper">
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          className="comment-date-user"
                         >
-                          {comment.user.first_name} {comment.user.last_name}
-                        </Link>
-                      </Typography>
+                          {formatDate(comment.date_time)} -{" "}
+                          <Link
+                            component={RouterLink}
+                            to={`/users/${comment.user._id}`}
+                            color="primary"
+                            className="comment-user-link"
+                          >
+                            {comment.user.first_name} {comment.user.last_name}
+                          </Link>
+                        </Typography>
+                        <Button
+                          onClick={() =>
+                            handleDeleteComment(photo._id, comment._id)
+                          }
+                        >
+                          Delete
+                        </Button>
+                      </div>
                       <Typography variant="body1" className="comment-text">
                         {comment.comment}
                       </Typography>

@@ -71,6 +71,27 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await models.deleteComment(photoId, commentId);
+      alert("Deleted comment");
+
+      const updatedPhotos = [...photoList];
+
+      const updatedComments = updatedPhotos[currentIndex].comments.filter(
+        (comment) => comment._id !== commentId
+      );
+
+      updatedPhotos[currentIndex] = {
+        ...updatedPhotos[currentIndex],
+        comments: updatedComments,
+      };
+      setPhotoList(updatedPhotos);
+    } catch (error) {
+      console.error("Error deleting comment");
+    }
+  };
+
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   return (
@@ -98,21 +119,28 @@ function PhotoStepper({ user, photos }) {
             {photo.comments &&
               photo.comments.map((comment) => (
                 <Card key={comment._id} className="comment-card">
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="comment-date-user"
-                  >
-                    {new Date(comment.date_time).toLocaleString()} -{" "}
-                    <Link
-                      component={RouterLink}
-                      to={`/users/${comment.user._id}`}
-                      color="primary"
-                      className="comment-user-link"
+                  <div className="comment-wrapper">
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      className="comment-date-user"
                     >
-                      {comment.user.first_name} {comment.user.last_name}
-                    </Link>
-                  </Typography>
+                      {new Date(comment.date_time).toLocaleString()} -{" "}
+                      <Link
+                        component={RouterLink}
+                        to={`/users/${comment.user._id}`}
+                        color="primary"
+                        className="comment-user-link"
+                      >
+                        {comment.user.first_name} {comment.user.last_name}
+                      </Link>
+                    </Typography>
+                    {currentUser._id === comment.user._id && (
+                      <Button onClick={() => handleDeleteComment(comment._id)}>
+                        Delete
+                      </Button>
+                    )}
+                  </div>
                   <Typography variant="body1" className="comment-text">
                     {comment.comment}
                   </Typography>

@@ -23,7 +23,7 @@ const models = {
   },
 
   addCommentToPhoto: async (photoId, comment, userId) => {
-    return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}`, {
+    return await fetchModel(`/photosOfUser/commentOfPhoto/${photoId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -55,6 +55,13 @@ const models = {
 
   deletePhoto: async (photoId) => {
     return await fetchModel(`/photosOfUser/${photoId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+  },
+
+  deleteComment: async (photoId, commentId) => {
+    return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}/${commentId}`, {
       method: 'DELETE',
       credentials: 'include'
     });
