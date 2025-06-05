@@ -42,11 +42,18 @@ function EditProfile() {
   };
 
   const handleSave = async () => {
-    setSaving(true);
     setError(null);
+
+    if (!user.first_name.trim() || !user.last_name.trim()) {
+      setError("First name and last name are required.");
+      return;
+    }
+
+    setSaving(true);
     try {
       await models.updateUser(currentUser._id, user);
       alert("Profile updated successfully");
+      window.location.reload();
     } catch (err) {
       setError("Failed to update profile");
     }
@@ -57,7 +64,9 @@ function EditProfile() {
 
   return (
     <div style={{ margin: "auto" }}>
-      <Typography variant="h5" gutterBottom>Edit Profile</Typography>
+      <Typography variant="h5" gutterBottom>
+        Edit Profile
+      </Typography>
       {error && <Typography color="error">{error}</Typography>}
 
       <TextField

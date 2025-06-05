@@ -66,6 +66,15 @@ const models = {
       credentials: 'include'
     });
   },
+
+  updateUser: async (userId, userData) => {
+    return await fetchModel(`/user/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(userData),
+    })
+  }
 };
 
 export default models;
