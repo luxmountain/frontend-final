@@ -16,7 +16,7 @@
 }
 
 .photo-card.clickable:hover {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .photo-image {
@@ -52,4 +52,10 @@
 
 .comment-text {
   margin-top: 8px;
+}
+
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }

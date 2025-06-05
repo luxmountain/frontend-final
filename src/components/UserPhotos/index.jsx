@@ -93,6 +93,16 @@ function UserPhotos() {
     }
   };
 
+  const handleDelete = async (photoId) => {
+    console.log("Delete", photoId);
+    try {
+      await models.deletePhoto(photoId);
+      window.location.reload();
+    } catch (error){
+      console.error(error);
+    }
+  };
+
   if (!user || !photos.length) {
     return <Typography variant="h4">Loading photos...</Typography>;
   }
@@ -128,10 +138,14 @@ function UserPhotos() {
               Posted on {formatDate(photo.date_time)}
             </Typography>
             <div className="comment-section">
-              <Typography variant="h6" gutterBottom>
-                Comments
-              </Typography>
-              
+              <div className="justify-between">
+                <Typography variant="h6" gutterBottom>
+                  Comments
+                </Typography>
+                <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={handleDelete(photo._id)}>
+                  Delete
+                </Button>
+              </div>
               {photo.comments &&
                 [...photo.comments]
                   .sort((a, b) => new Date(b.date_time) - new Date(a.date_time))

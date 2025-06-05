@@ -30,7 +30,7 @@ const models = {
       body: JSON.stringify({ comment, user_id: userId }),
     });
   },
-commentsOfUser: (userId) => fetchModel(`/user/comment/${userId}`),
+  commentsOfUser: (userId) => fetchModel(`/user/comment/${userId}`),
 
   register: async (userData) => {
     return await fetchModel('/user', {
@@ -45,14 +45,20 @@ commentsOfUser: (userId) => fetchModel(`/user/comment/${userId}`),
     const formData = new FormData();
     formData.append('photo', file);
     formData.append('user_id', userId);
-    
+
     return await fetchModel('/photosOfUser/new', {
       method: 'POST',
       credentials: 'include',
       body: formData,
     });
-  }
+  },
 
+  deletePhoto: async (photoId) => {
+    return await fetchModel(`/photosOfUser/${photoId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+  },
 };
 
 export default models;
