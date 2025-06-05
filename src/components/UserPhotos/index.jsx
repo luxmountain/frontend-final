@@ -96,14 +96,24 @@ function UserPhotos() {
   const handleDelete = async (photoId) => {
     try {
       await models.deletePhoto(photoId);
-      window.location.reload();
+      setPhotos((prev) => prev.filter((p) => p._id !== photoId));
     } catch (error){
       console.error(error);
     }
   };
 
-  if (!user || !photos.length) {
+  if (!user || photos === null) {
     return <Typography variant="h4">Loading photos...</Typography>;
+  }
+
+  if(photos.length === 0){
+    return (
+      <Box p={3}>
+        <Typography variant="h5">
+          {user.first_name} has not uploaded any photos yet.
+        </Typography>
+      </Box>
+    )
   }
 
   if (advancedFeatures && photoId) {
@@ -115,7 +125,7 @@ function UserPhotos() {
     return null;
   }
 
-  const BACKEND_URL = "http://localhost:8081";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   return (
     <div className="photo-container">
@@ -141,7 +151,7 @@ function UserPhotos() {
                 <Typography variant="h6" gutterBottom>
                   Comments
                 </Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={handleDelete(photo._id)}>
+                <Button variant="contained" color="primary" sx={{ mt: 1 }} onClick={() => handleDelete(photo._id)}>
                   Delete
                 </Button>
               </div>

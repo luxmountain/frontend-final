@@ -71,7 +71,7 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
-  const BACKEND_URL = "http://localhost:8081";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   return (
     <Box className="photo-stepper-container">
