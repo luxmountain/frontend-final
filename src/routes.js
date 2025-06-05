@@ -6,6 +6,7 @@ const UserDetail = React.lazy(() => import('./components/UserDetail'));
 const UserPhotos = React.lazy(() => import('./components/UserPhotos'));
 const UserComments = React.lazy(() => import('./components/UserComments'));
 const Profile = React.lazy(() => import('./components/Profile'));
+const EditProfile = React.lazy(() => import('./components/EditProfile'));
 
 const routes = [
   {
@@ -14,11 +15,17 @@ const routes = [
     protected: true,
     label: 'UserList',
   },
-    {
+  {
     path: '/profile',
     element: Profile,
     protected: true,
     label: 'Profile',
+  },
+  {
+    path: '/edit-profile',
+    element: EditProfile,
+    protected: true,
+    label: 'Edit Profile',
   },
   {
     path: '/users',
