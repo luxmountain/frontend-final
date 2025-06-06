@@ -23,8 +23,14 @@
     width: 100%;
 }
 
-.setting-btn{
+.setting-btn {
     bottom: 1rem;
     right: 1rem;
+    position: absolute;
+}
+
+.show-list-btn {
+    bottom: 1rem;
+    left: 1rem;
     position: absolute;
 }

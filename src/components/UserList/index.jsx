@@ -8,6 +8,7 @@ import {
   Badge,
   Box,
   Button,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
@@ -42,6 +43,13 @@ function UserList({ showBadges = false }) {
 
   return (
     <div className="user-list">
+      {!showBadges && (
+        <Typography>
+          There {filteredUsers.length === 1 ? "is" : "are"}{" "}
+          <strong>{filteredUsers.length}</strong>{" "}
+          {filteredUsers.length === 1 ? "user" : "users"}
+        </Typography>
+      )}
       <List component="nav">
         {filteredUsers.map((user) => (
           <React.Fragment key={user._id}>
@@ -92,11 +100,20 @@ function UserList({ showBadges = false }) {
           </React.Fragment>
         ))}
       </List>
-      <div className="setting-btn">
-        <Button variant="outlined" onClick={() => navigate("/profile")}>
-          Profile
-        </Button>
-      </div>
+      {showBadges && (
+        <>
+          <div className="show-list-btn">
+            <Button variant="outlined" onClick={() => navigate("/users")}>
+              User List
+            </Button>
+          </div>
+          <div className="setting-btn">
+            <Button variant="contained" onClick={() => navigate("/profile")}>
+              Profile
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
