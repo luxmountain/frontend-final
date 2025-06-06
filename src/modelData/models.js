@@ -74,6 +74,24 @@ const models = {
     });
   },
 
+  likePhoto: async (photoId, userId) => {
+    return await fetchModel(`/photoOfUser/${photoId}/like`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ user_id: userId }),
+    })
+  },
+
+  unlikePhoto: async (photoId, userId) => {
+    return await fetchModel(`/photoOfUser/${photoId}/like`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ user_id: userId }),
+    })
+  },
+
   updateUser: async (userId, userData) => {
     return await fetchModel(`/user/${userId}`, {
       method: 'PUT',
