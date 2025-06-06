@@ -125,8 +125,32 @@ function UserPhotos() {
     }
   };
 
-  const handleToggleLike = () => {
+  const handleToggleLike = async (photoId) => {
+    const updatedPhotos = [...photos];
+    const photoIndex = updatedPhotos.findIndex((p) => p._id === photoId);
+    if (photoIndex === -1) return;
 
+    const photo = updatedPhotos[photoIndex];
+    const hasLiked = photo.likes?.some(
+      (like) => like.user_id === currentUser._id
+    );
+
+    try {
+      if (hasLiked) {
+        await models.unlikePhoto(photoId, currentUser._id);
+        photo.likes = photo.likes.filter(
+          (like) => like.user_id !== currentUser._id
+        );
+      } else {
+        await models.likePhoto(photoId, currentUser._id);
+        photo.likes = [...(photo.likes || []), { user_id: currentUser._id }];
+      }
+
+      updatedPhotos[photoIndex] = { ...photo };
+      setPhotos(updatedPhotos);
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+    }
   };
 
   if (!user || photos === null) {
@@ -173,25 +197,31 @@ function UserPhotos() {
             <Button
               size="small"
               variant={
-                photo.likes?.includes(currentUser._id)
+                photo.likes?.some((like) => like.user_id === currentUser._id)
                   ? "contained"
                   : "outlined"
               }
               color={
-                photo.likes?.includes(currentUser._id) ? "error" : "primary"
+                photo.likes?.some((like) => like.user_id === currentUser._id)
+                  ? "error"
+                  : "primary"
               }
-              onClick={handleToggleLike}
+              onClick={() => handleToggleLike(photo._id)}
               sx={{ my: 2, textTransform: "none", minWidth: "6rem" }}
               startIcon={
-                photo.likes?.includes(currentUser._id) ? (
+                photo.likes?.some(
+                  (like) => like.user_id === currentUser._id
+                ) ? (
                   <FavoriteIcon />
                 ) : (
                   <FavoriteBorderIcon />
                 )
               }
             >
-              {photo.likes?.includes(currentUser._id) ? "Liked" : "Like"} (
-              {photo.likes?.length || 0})
+              {photo.likes?.some((like) => like.user_id === currentUser._id)
+                ? "Liked"
+                : "Like"}{" "}
+              ({photo.likes?.length || 0})
             </Button>
             <div className="justify-between">
               <Typography variant="body2" color="textSecondary">
