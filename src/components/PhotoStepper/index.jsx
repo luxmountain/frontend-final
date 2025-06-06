@@ -106,22 +106,33 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
-  const handleToggleLike = () => {
+  const handleToggleLike = async () => {
     const updated = [...photoList];
     const currentPhoto = updated[currentIndex];
 
-    const hasLiked = currentPhoto.likes?.includes(currentUser._id);
+    const hasLiked = currentPhoto.likes?.some(
+      (like) => like.user_id === currentUser._id
+    );
 
-    const newLikes = hasLiked
-      ? currentPhoto.likes.filter((id) => id !== currentUser._id) // Unlike
-      : [...(currentPhoto.likes || []), currentUser._id]; // Like
+    try {
+      if (hasLiked) {
+        await models.unlikePhoto(currentPhoto._id, currentUser._id);
+        currentPhoto.likes = currentPhoto.likes.filter(
+          (like) => like.user_id !== currentUser._id
+        );
+      } else {
+        await models.likePhoto(currentPhoto._id, currentUser._id);
+        currentPhoto.likes = [
+          ...(currentPhoto.likes || []),
+          { user_id: currentUser._id },
+        ];
+      }
 
-    updated[currentIndex] = {
-      ...currentPhoto,
-      likes: newLikes,
-    };
-
-    setPhotoList(updated);
+      updated[currentIndex] = { ...currentPhoto };
+      setPhotoList(updated);
+    } catch (error) {
+      console.error("Failed to toggle like:", error);
+    }
   };
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -144,21 +155,29 @@ function PhotoStepper({ user, photos }) {
           <Button
             size="small"
             variant={
-              photo.likes?.includes(currentUser._id) ? "contained" : "outlined"
+              photo.likes?.some((like) => like.user_id === currentUser._id)
+                ? "contained"
+                : "outlined"
             }
-            color={photo.likes?.includes(currentUser._id) ? "error" : "primary"}
+            color={
+              photo.likes?.some((like) => like.user_id === currentUser._id)
+                ? "error"
+                : "primary"
+            }
             onClick={handleToggleLike}
             sx={{ my: 2, textTransform: "none", minWidth: "6rem" }}
             startIcon={
-              photo.likes?.includes(currentUser._id) ? (
+              photo.likes?.some((like) => like.user_id === currentUser._id) ? (
                 <FavoriteIcon />
               ) : (
                 <FavoriteBorderIcon />
               )
             }
           >
-            {photo.likes?.includes(currentUser._id) ? "Liked" : "Like"} (
-            {photo.likes?.length || 0})
+            {photo.likes?.some((like) => like.user_id === currentUser._id)
+              ? "Liked"
+              : "Like"}{" "}
+            ({photo.likes?.length || 0})
           </Button>
 
           <div className="justify-between">
@@ -166,7 +185,11 @@ function PhotoStepper({ user, photos }) {
               Posted on {new Date(photo.date_time).toLocaleString()}
             </Typography>
             {currentUser._id === photo.user_id && (
-              <Button variant="contained" color="error" onClick={() => handleDeletePost()}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleDeletePost()}
+              >
                 Delete Post
               </Button>
             )}

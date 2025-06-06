@@ -75,7 +75,7 @@ const models = {
   },
 
   likePhoto: async (photoId, userId) => {
-    return await fetchModel(`/photoOfUser/${photoId}/like`, {
+    return await fetchModel(`/photosOfUser/${photoId}/like`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -84,7 +84,7 @@ const models = {
   },
 
   unlikePhoto: async (photoId, userId) => {
-    return await fetchModel(`/photoOfUser/${photoId}/like`, {
+    return await fetchModel(`/photosOfUser/${photoId}/like`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

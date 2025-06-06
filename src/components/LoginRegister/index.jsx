@@ -106,7 +106,6 @@ function LoginRegister() {
         occupation: registerForm.occupation,
       });
 
-      console.log(res);
       if (res) {
         setRegisterSuccess("Registration successful! You can now log in.");
         setRegisterForm({

@@ -16,7 +16,6 @@ function Profile() {
       try {
         const data = await models.userModel(currentUser._id);
         setUser(data);
-        console.log(data);
       } catch (err) {
         console.error("Failed to fetch user data:", err);
       }
