@@ -9,6 +9,11 @@ import {
   Box,
   Button,
   Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  TextField,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
@@ -20,15 +25,13 @@ function UserList({ showBadges = false }) {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("default");
 
   useEffect(() => {
     async function loadUsers() {
       const data = await models.userListModel();
       if (Array.isArray(data)) {
-        const sortedUsers = data.sort(
-          (a, b) => (b.photoCount || 0) - (a.photoCount || 0)
-        );
-        setUsers(sortedUsers);
+        setUsers(data);
       } else {
         console.error("userListModel returned non-array data:", data);
       }
@@ -36,7 +39,18 @@ function UserList({ showBadges = false }) {
     loadUsers();
   }, []);
 
-  const filteredUsers = users.filter(
+  const sortedUsers = [...users].sort((a, b) => {
+    if (sortOption === "post") {
+      return (b.photoCount || 0) - (a.photoCount || 0);
+    } else if (sortOption === "name") {
+      return (a.first_name + " " + a.last_name).localeCompare(
+        b.first_name + " " + b.last_name
+      );
+    }
+    return 0;
+  });
+
+  const filteredUsers = sortedUsers.filter(
     (user) =>
       user._id !== currentUser?._id &&
       `${user.first_name} ${user.last_name}`
@@ -44,22 +58,33 @@ function UserList({ showBadges = false }) {
         .includes(searchQuery.toLowerCase())
   );
 
-  if (!filteredUsers.length) return <div>No users found.</div>;
-
   return (
     <div className="user-list">
-      {!showBadges && (
+      {showBadges && (
         <>
-          <Box mb={2}>
-            <input
-              type="text"
-              placeholder="Search by name"
-              value={searchQuery}
+          <Box mb={2} mt={1}>
+            <TextField
+              fullWidth
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
+              value={searchQuery}
+              variant="outlined"
+              label="Search User"
             />
           </Box>
-
+          <Box mb={2}>
+            <FormControl fullWidth>
+              <InputLabel>Sort by:</InputLabel>
+              <Select
+                value={sortOption}
+                label="gender"
+                onChange={(e) => setSortOption(e.target.value)}
+              >
+                <MenuItem value={"default"}>Default</MenuItem>
+                <MenuItem value={"post"}>Post Count</MenuItem>
+                <MenuItem value={"name"}>Name</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Typography>
             There {filteredUsers.length === 1 ? "is" : "are"}{" "}
             <strong>{filteredUsers.length}</strong>{" "}

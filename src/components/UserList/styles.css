@@ -42,3 +42,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.sort-select{
+    margin-left: 1rem;
+}
