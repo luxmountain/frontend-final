@@ -159,11 +159,7 @@ function UserPhotos() {
     if (!newText) return alert("Comment cannot be empty");
 
     try {
-      await models.editComment(
-        photoId,
-        commentId,
-        newText
-      );
+      await models.editComment(photoId, commentId, newText);
       setPhotos((prevPhotos) =>
         prevPhotos.map((photo) => {
           if (photo._id === photoId) {
