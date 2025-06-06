@@ -5,7 +5,7 @@ const theme = createTheme({
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          color: "white", // ✅ Màu trắng cho label
+          color: "white",
         },
       },
     },
@@ -26,13 +26,15 @@ const theme = createTheme({
     },
     MuiButton: {
       styleOverrides: {
-        contained: {
-          backgroundColor: "black",
-          color: "white",
-          "&:hover": {
-            backgroundColor: "#333",
-          },
-        },
+        contained: ({ ownerState }) => ({
+          ...(ownerState.color === "primary" && {
+            backgroundColor: "black",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#333",
+            },
+          }),
+        }),
         outlined: {
           backgroundColor: "transparent",
           color: "black",

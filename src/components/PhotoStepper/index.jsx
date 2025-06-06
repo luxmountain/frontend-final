@@ -166,7 +166,7 @@ function PhotoStepper({ user, photos }) {
               Posted on {new Date(photo.date_time).toLocaleString()}
             </Typography>
             {currentUser._id === photo.user_id && (
-              <Button variant="contained" onClick={() => handleDeletePost()}>
+              <Button variant="contained" color="error" onClick={() => handleDeletePost()}>
                 Delete Post
               </Button>
             )}

@@ -200,7 +200,7 @@ function UserPhotos() {
               {currentUser._id === photo.user_id && (
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="error"
                   onClick={() => handleDelete(photo._id)}
                 >
                   Delete Post
