@@ -47,7 +47,9 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
-  if (!photos.length) return <Typography>Loading photos...</Typography>;
+  if (!photos.length || !photoList[currentIndex]) {
+    return <Typography>Loading photos...</Typography>;
+  }
 
   const photo = photoList[currentIndex];
 
@@ -92,6 +94,16 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
+  const handleDeletePost = async () => {
+    try {
+      await models.deletePhoto(photoId);
+      alert("Deleted post successfully");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error delete post");
+    }
+  };
+
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   return (
@@ -109,9 +121,16 @@ function PhotoStepper({ user, photos }) {
           loading="lazy"
         />
         <CardContent>
-          <Typography variant="body2" color="textSecondary" gutterBottom>
-            Posted on {new Date(photo.date_time).toLocaleString()}
-          </Typography>
+          <div className="justify-between">
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Posted on {new Date(photo.date_time).toLocaleString()}
+            </Typography>
+            {currentUser._id === photo.user_id && (
+              <Button variant="contained" onClick={() => handleDeletePost()}>
+                Delete Post
+              </Button>
+            )}
+          </div>
           <div className="comment-section">
             <Typography variant="h6" gutterBottom>
               Comments

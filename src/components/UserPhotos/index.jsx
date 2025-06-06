@@ -168,13 +168,15 @@ function UserPhotos() {
               <Typography variant="body2" color="textSecondary">
                 Posted on {formatDate(photo.date_time)}
               </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleDelete(photo._id)}
-              >
-                Delete Post
-              </Button>
+              {currentUser._id === photo.user_id && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleDelete(photo._id)}
+                >
+                  Delete Post
+                </Button>
+              )}
             </div>
             <div className="comment-section">
               <Typography variant="h6" gutterBottom>
@@ -202,13 +204,15 @@ function UserPhotos() {
                             {comment.user.first_name} {comment.user.last_name}
                           </Link>
                         </Typography>
-                        <Button
-                          onClick={() =>
-                            handleDeleteComment(photo._id, comment._id)
-                          }
-                        >
-                          Delete
-                        </Button>
+                        {currentUser._id === comment.user._id && (
+                          <Button
+                            onClick={() =>
+                              handleDeleteComment(photo._id, comment._id)
+                            }
+                          >
+                            Delete
+                          </Button>
+                        )}
                       </div>
                       <Typography variant="body1" className="comment-text">
                         {comment.comment}
