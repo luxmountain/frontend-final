@@ -52,6 +52,9 @@ function Profile() {
         <strong>Location:</strong> {user.location}
       </Typography>
       <Typography variant="body1">
+        <strong>Gender:</strong> {user.gender}
+      </Typography>
+      <Typography variant="body1">
         <strong>Occupation:</strong> {user.occupation}
       </Typography>
       <Typography variant="body1">

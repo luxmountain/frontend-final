@@ -8,11 +8,16 @@ import {
   Alert,
   IconButton,
   InputAdornment,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import models from "../../modelData/models";
 import { useAuth } from "../../context/AuthContext";
+import "./styles.css";
 
 function LoginRegister() {
   const [isLogin, setIsLogin] = useState(true);
@@ -35,6 +40,7 @@ function LoginRegister() {
     confirmPassword: "",
     firstName: "",
     lastName: "",
+    gender: "",
     location: "",
     description: "",
     occupation: "",
@@ -101,6 +107,7 @@ function LoginRegister() {
         password: registerForm.password,
         first_name: registerForm.firstName,
         last_name: registerForm.lastName,
+        gender: registerForm.gender,
         location: registerForm.location,
         description: registerForm.description,
         occupation: registerForm.occupation,
@@ -114,6 +121,7 @@ function LoginRegister() {
           confirmPassword: "",
           firstName: "",
           lastName: "",
+          gender: "",
           location: "",
           description: "",
           occupation: "",
@@ -291,6 +299,19 @@ function LoginRegister() {
               onChange={handleRegisterChange("lastName")}
               margin="normal"
             />
+            <div className="selectbox-gender">
+              <FormControl fullWidth>
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  value={registerForm.gender}
+                  label="gender"
+                  onChange={handleRegisterChange("gender")}
+                >
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
             <TextField
               fullWidth
               label="Location"

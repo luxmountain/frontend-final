@@ -19,6 +19,7 @@ function UserList({ showBadges = false }) {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     async function loadUsers() {
@@ -35,20 +36,36 @@ function UserList({ showBadges = false }) {
     loadUsers();
   }, []);
 
-  const filteredUsers = currentUser
-    ? users.filter((user) => user._id !== currentUser._id)
-    : users;
+  const filteredUsers = users.filter(
+    (user) =>
+      user._id !== currentUser?._id &&
+      `${user.first_name} ${user.last_name}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+  );
 
   if (!filteredUsers.length) return <div>No users found.</div>;
 
   return (
     <div className="user-list">
       {!showBadges && (
-        <Typography>
-          There {filteredUsers.length === 1 ? "is" : "are"}{" "}
-          <strong>{filteredUsers.length}</strong>{" "}
-          {filteredUsers.length === 1 ? "user" : "users"}
-        </Typography>
+        <>
+          <Box mb={2}>
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
+            />
+          </Box>
+
+          <Typography>
+            There {filteredUsers.length === 1 ? "is" : "are"}{" "}
+            <strong>{filteredUsers.length}</strong>{" "}
+            {filteredUsers.length === 1 ? "user" : "users"}
+          </Typography>
+        </>
       )}
       <List component="nav">
         {filteredUsers.map((user) => (
