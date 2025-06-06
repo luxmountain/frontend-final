@@ -25,6 +25,7 @@ function UserPhotos() {
   const [advancedFeatures, setAdvancedFeatures] = useState(false);
   const [commentTexts, setCommentTexts] = useState({});
   const { currentUser } = useAuth();
+  const [editingComments, setEditingComments] = useState({});
 
   useEffect(() => {
     async function fetchData() {
@@ -153,6 +154,38 @@ function UserPhotos() {
     }
   };
 
+  const handleEditComment = async (photoId, commentId) => {
+    const newText = editingComments[commentId]?.trim();
+    if (!newText) return alert("Comment cannot be empty");
+
+    try {
+      await models.editComment(
+        photoId,
+        commentId,
+        newText
+      );
+      setPhotos((prevPhotos) =>
+        prevPhotos.map((photo) => {
+          if (photo._id === photoId) {
+            const newComments = photo.comments.map((c) =>
+              c._id === commentId ? { ...c, comment: newText } : c
+            );
+            return { ...photo, comments: newComments };
+          }
+          return photo;
+        })
+      );
+
+      setEditingComments((prev) => {
+        const newState = { ...prev };
+        delete newState[commentId];
+        return newState;
+      });
+    } catch (err) {
+      console.error("Failed to edit comment:", err);
+    }
+  };
+
   if (!user || photos === null) {
     return <Typography variant="h4">Loading photos...</Typography>;
   }
@@ -264,18 +297,71 @@ function UserPhotos() {
                           </Link>
                         </Typography>
                         {currentUser._id === comment.user._id && (
-                          <Button
-                            onClick={() =>
-                              handleDeleteComment(photo._id, comment._id)
-                            }
-                          >
-                            Delete
-                          </Button>
+                          <div>
+                            <Button
+                              onClick={() =>
+                                setEditingComments((prev) => ({
+                                  ...prev,
+                                  [comment._id]: comment.comment,
+                                }))
+                              }
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() =>
+                                handleDeleteComment(photo._id, comment._id)
+                              }
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         )}
                       </div>
-                      <Typography variant="body1" className="comment-text">
-                        {comment.comment}
-                      </Typography>
+                      {editingComments.hasOwnProperty(comment._id) ? (
+                        <>
+                          <TextField
+                            fullWidth
+                            multiline
+                            variant="outlined"
+                            value={editingComments[comment._id]}
+                            onChange={(e) =>
+                              setEditingComments((prev) => ({
+                                ...prev,
+                                [comment._id]: e.target.value,
+                              }))
+                            }
+                            sx={{ mb: 1 }}
+                          />
+                          <Box display="flex" gap={1} justifyContent="flex-end">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() =>
+                                handleEditComment(photo._id, comment._id)
+                              }
+                            >
+                              Save
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              onClick={() =>
+                                setEditingComments((prev) => {
+                                  const newState = { ...prev };
+                                  delete newState[comment._id];
+                                  return newState;
+                                })
+                              }
+                            >
+                              Cancel
+                            </Button>
+                          </Box>
+                        </>
+                      ) : (
+                        <Typography variant="body1" className="comment-text">
+                          {comment.comment}
+                        </Typography>
+                      )}
                     </Card>
                   ))}
             </div>

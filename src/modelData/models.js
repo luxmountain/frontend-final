@@ -70,7 +70,7 @@ const models = {
   deleteUser: async (userId) => {
     return await fetchModel(`/user/${userId}`, {
       method: 'DELETE',
-      credentials: 'include'
+      credentials: 'include',
     });
   },
 
@@ -99,7 +99,16 @@ const models = {
       credentials: 'include',
       body: JSON.stringify(userData),
     })
-  }
+  },
+
+  editComment: async (photoId, commentId, newComment) => {
+    return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}/${commentId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ comment: newComment }),
+    });
+  },
 };
 
 export default models;
