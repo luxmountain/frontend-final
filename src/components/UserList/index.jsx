@@ -72,16 +72,17 @@ function UserList({ showBadges = false }) {
             />
           </Box>
           <Box mb={2}>
-            <FormControl fullWidth>
-              <InputLabel>Sort by:</InputLabel>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel id="sort-label">Sort by:</InputLabel>
               <Select
+                labelId="sort-label"
                 value={sortOption}
-                label="gender"
+                label="Sort by:"
                 onChange={(e) => setSortOption(e.target.value)}
               >
-                <MenuItem value={"default"}>Default</MenuItem>
-                <MenuItem value={"post"}>Post Count</MenuItem>
-                <MenuItem value={"name"}>Name</MenuItem>
+                <MenuItem value="default">Default</MenuItem>
+                <MenuItem value="post">Post Count</MenuItem>
+                <MenuItem value="name">Name</MenuItem>
               </Select>
             </FormControl>
           </Box>
