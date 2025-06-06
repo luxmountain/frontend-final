@@ -28,8 +28,10 @@ function TopBar() {
       const pathParts = location.pathname.split("/").filter(Boolean);
 
       if (
-        (pathParts[0] === "users" || pathParts[0] === "photos") &&
-        pathParts.length === 2
+        (pathParts[0] === "users" ||
+          pathParts[0] === "photos" ||
+          pathParts[0] === "comments") &&
+        (pathParts.length === 2 || pathParts.length === 3)
       ) {
         const userId = pathParts[1];
         try {
@@ -42,6 +44,8 @@ function TopBar() {
                   ? "My Photos"
                   : `Photos of ${fullName}`
               );
+            } else if (pathParts[0] === "comments") {
+              setContextText(`Comments of ${fullName}`);
             } else {
               setContextText(fullName);
             }
@@ -52,7 +56,9 @@ function TopBar() {
         }
       } else {
         setContextText(
-          currentUser ? `Hi ${currentUser.first_name}` : "Please Login"
+          currentUser
+            ? `${currentUser.first_name} ${currentUser.last_name}`
+            : "Please Login"
         );
       }
     }
