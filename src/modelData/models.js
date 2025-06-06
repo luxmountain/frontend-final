@@ -10,7 +10,6 @@ const models = {
     return await fetchModel('/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ login_name: loginName, password }),
     });
   },
@@ -18,7 +17,6 @@ const models = {
   logout: async () => {
     return await fetchModel('/admin/logout', {
       method: 'POST',
-      credentials: 'include'
     });
   },
 
@@ -26,7 +24,6 @@ const models = {
     return await fetchModel(`/photosOfUser/commentOfPhoto/${photoId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ comment, user_id: userId }),
     });
   },
@@ -36,7 +33,6 @@ const models = {
     return await fetchModel('/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify(userData),
     });
   },
@@ -48,7 +44,6 @@ const models = {
 
     return await fetchModel('/photosOfUser/new', {
       method: 'POST',
-      credentials: 'include',
       body: formData,
     });
   },
@@ -56,21 +51,18 @@ const models = {
   deletePhoto: async (photoId) => {
     return await fetchModel(`/photosOfUser/${photoId}`, {
       method: 'DELETE',
-      credentials: 'include'
     });
   },
 
   deleteComment: async (photoId, commentId) => {
     return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}/${commentId}`, {
       method: 'DELETE',
-      credentials: 'include'
     });
   },
 
   deleteUser: async (userId) => {
     return await fetchModel(`/user/${userId}`, {
       method: 'DELETE',
-      credentials: 'include',
     });
   },
 
@@ -78,7 +70,6 @@ const models = {
     return await fetchModel(`/photosOfUser/${photoId}/like`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ user_id: userId }),
     })
   },
@@ -87,7 +78,6 @@ const models = {
     return await fetchModel(`/photosOfUser/${photoId}/like`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ user_id: userId }),
     })
   },
@@ -96,7 +86,6 @@ const models = {
     return await fetchModel(`/user/${userId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify(userData),
     })
   },
@@ -105,7 +94,6 @@ const models = {
     return await fetchModel(`/photosOfUser/commentsOfPhoto/${photoId}/${commentId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ comment: newComment }),
     });
   },
