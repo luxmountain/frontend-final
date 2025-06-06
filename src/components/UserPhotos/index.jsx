@@ -14,6 +14,8 @@ import models from "../../modelData/models";
 import PhotoStepper from "../PhotoStepper";
 import "./styles.css";
 import { useAuth } from "../../context/AuthContext";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function UserPhotos() {
   const { userId, photoId } = useParams();
@@ -123,6 +125,10 @@ function UserPhotos() {
     }
   };
 
+  const handleToggleLike = () => {
+
+  };
+
   if (!user || photos === null) {
     return <Typography variant="h4">Loading photos...</Typography>;
   }
@@ -164,6 +170,29 @@ function UserPhotos() {
             loading="lazy"
           />
           <CardContent>
+            <Button
+              size="small"
+              variant={
+                photo.likes?.includes(currentUser._id)
+                  ? "contained"
+                  : "outlined"
+              }
+              color={
+                photo.likes?.includes(currentUser._id) ? "error" : "primary"
+              }
+              onClick={handleToggleLike}
+              sx={{ my: 2, textTransform: "none", minWidth: "6rem" }}
+              startIcon={
+                photo.likes?.includes(currentUser._id) ? (
+                  <FavoriteIcon />
+                ) : (
+                  <FavoriteBorderIcon />
+                )
+              }
+            >
+              {photo.likes?.includes(currentUser._id) ? "Liked" : "Like"} (
+              {photo.likes?.length || 0})
+            </Button>
             <div className="justify-between">
               <Typography variant="body2" color="textSecondary">
                 Posted on {formatDate(photo.date_time)}

@@ -13,6 +13,8 @@ import "./styles.css";
 import TextField from "@mui/material/TextField";
 import models from "../../modelData/models";
 import { useAuth } from "../../context/AuthContext";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function PhotoStepper({ user, photos }) {
   const { photoId, userId } = useParams();
@@ -104,6 +106,24 @@ function PhotoStepper({ user, photos }) {
     }
   };
 
+  const handleToggleLike = () => {
+    const updated = [...photoList];
+    const currentPhoto = updated[currentIndex];
+
+    const hasLiked = currentPhoto.likes?.includes(currentUser._id);
+
+    const newLikes = hasLiked
+      ? currentPhoto.likes.filter((id) => id !== currentUser._id) // Unlike
+      : [...(currentPhoto.likes || []), currentUser._id]; // Like
+
+    updated[currentIndex] = {
+      ...currentPhoto,
+      likes: newLikes,
+    };
+
+    setPhotoList(updated);
+  };
+
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   return (
@@ -121,6 +141,26 @@ function PhotoStepper({ user, photos }) {
           loading="lazy"
         />
         <CardContent>
+          <Button
+            size="small"
+            variant={
+              photo.likes?.includes(currentUser._id) ? "contained" : "outlined"
+            }
+            color={photo.likes?.includes(currentUser._id) ? "error" : "primary"}
+            onClick={handleToggleLike}
+            sx={{ my: 2, textTransform: "none", minWidth: "6rem" }}
+            startIcon={
+              photo.likes?.includes(currentUser._id) ? (
+                <FavoriteIcon />
+              ) : (
+                <FavoriteBorderIcon />
+              )
+            }
+          >
+            {photo.likes?.includes(currentUser._id) ? "Liked" : "Like"} (
+            {photo.likes?.length || 0})
+          </Button>
+
           <div className="justify-between">
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Posted on {new Date(photo.date_time).toLocaleString()}
